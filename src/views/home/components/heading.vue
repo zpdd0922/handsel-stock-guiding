@@ -3,7 +3,7 @@
     <div class="left">
       <div class="logo"></div>
       <!-- a、若开户配置赠股 -->
-      <div v-if="renderStatus!=='开户预批通过'" class="title-wrap">
+      <div v-if="renderStatus !== '开户预批通过'" class="title-wrap">
         <div class="title">您有3股中国平安待领取！</div>
         <div class="subhead">新人开户，立领股票</div>
       </div>
@@ -13,12 +13,12 @@
         <div class="subhead">新人开户，立领免佣</div>
       </div>
       <!-- a、若入金配置的是赠股（多档位取最低档） -->
-      <div v-if="renderStatus==='开户预批通过'" class="title-wrap">
+      <div v-if="renderStatus === '开户预批通过'" class="title-wrap">
         <div class="title">您有3股中国平安待领取</div>
         <div class="subhead">首次入金就送蓝筹股</div>
       </div>
       <!-- b、若入金配了现金红包则显示（{218}取低档，{1000}取高档） -->
-      <div v-if="renderStatus==='开户预批通过'&& false" class="title-wrap">
+      <div v-if="renderStatus === '开户预批通过' && false" class="title-wrap">
         <div class="title">您有218元现金红包待领取！</div>
         <div class="subhead">首次入金最高送1000元</div>
       </div>

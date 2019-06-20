@@ -24,7 +24,7 @@
         </div>
         <!-- 待领取股票列表 -->
         <div class="stockTable">
-          <StockList :skin="skin"></StockList>
+          <StockList :skin="skin" @getReward="getReward"></StockList>
         </div>
 
         <!-- 入金 -->
@@ -68,9 +68,22 @@
           </Table>
         </div>
       </div>
-    <cube-button @click="showOpenAccountPopup" style="height:80px">测试1</cube-button>
-    <cube-button @click="showDepositPopup" style="height:80px">测试2</cube-button>
-    <cube-button @click="showTransferPopup" style="height:80px">测试3</cube-button>
+      <cube-button @click="showOpenAccountPopup" style="height:80px"
+        >测试1</cube-button
+      >
+      <cube-button @click="showDepositPopup" style="height:80px"
+        >测试2</cube-button
+      >
+      <cube-button @click="showTransferPopup" style="height:80px"
+        >测试3</cube-button
+      >
+      <cube-button @click="showDepositRulePopup" style="height:80px"
+        >测试4</cube-button
+      >
+      <cube-button @click="showTransferRulePopup" style="height:80px"
+        >测试5</cube-button
+      >
+      <cube-button @click="showStockBox" style="height:80px">测试6</cube-button>
     </cube-scroll>
 
     <!-- 立即开户弹框 -->
@@ -90,12 +103,11 @@
           <p class="tips">开户成功即可领取</p>
         </div>
         <div class="footer">
-          <cube-checkbox class="with-click"
-                       v-model="agreeChecked">
-          我同意并授权玖富证券团队处理印花税事宜
-        </cube-checkbox>
+          <cube-checkbox class="with-click" v-model="agreeChecked">
+            我同意并授权玖富证券团队处理印花税事宜
+          </cube-checkbox>
         </div>
-        <div class="clickBtn">
+        <div class="clickBtn" @click="jumpOpenAccount">
           <p>立即开户</p>
         </div>
         <div class="closeBtn" @click="closeOpenAccountPopup"></div>
@@ -114,30 +126,27 @@
           <p class="title">恭喜您</p>
         </div>
         <div class="content">
-          <p class="getStock">获取<span class="stkName">【招商银行】</span>股票奖励，</p>
+          <p class="getStock">
+            获取<span class="stkName">【招商银行】</span>股票奖励，
+          </p>
           <p class="tips">入金满相应额度即可领取</p>
           <table>
             <tr>
-              <th>首次入金</th>
+              <th>首次入金满</th>
               <th>奖励股票</th>
             </tr>
             <tr v-for="(item, index) in depositRwList" :key="index">
-              <td>
-                HK{{item.amount}}
-              </td>
-                <td>
-                {{item.stkQuantity}}股{{item.stkName}}
-              </td>
+              <td>HK{{ item.amount }}</td>
+              <td>{{ item.stkQuantity }}股{{ item.stkName }}</td>
             </tr>
           </table>
         </div>
         <div class="footer">
-          <cube-checkbox class="with-click"
-                       v-model="agreeChecked">
-          我同意并授权玖富证券团队处理印花税事宜
-        </cube-checkbox>
+          <cube-checkbox class="with-click" v-model="agreeChecked">
+            我同意并授权玖富证券团队处理印花税事宜
+          </cube-checkbox>
         </div>
-        <div class="clickBtn">
+        <div class="clickBtn" @click="jumpDeposit">
           <p>立即入金</p>
         </div>
         <div class="closeBtn" @click="closeDepositPopup"></div>
@@ -156,37 +165,117 @@
           <p class="title">恭喜您</p>
         </div>
         <div class="content">
-          <p class="getStock">获取<span class="stkName">【招商银行】</span>股票奖励，</p>
+          <p class="getStock">
+            获取<span class="stkName">【招商银行】</span>股票奖励，
+          </p>
           <p class="tips">转仓市值满相应额度即可领取</p>
           <table>
             <tr>
-              <th>首次转仓</th>
+              <th>首次转仓满</th>
               <th>奖励股票</th>
             </tr>
             <tr v-for="(item, index) in transferRwList" :key="index">
-              <td>
-                HK{{item.amount}}
-              </td>
-                <td>
-                {{item.stkQuantity}}股{{item.stkName}}
-              </td>
+              <td>HK{{ item.amount }}</td>
+              <td>{{ item.stkQuantity }}股{{ item.stkName }}</td>
             </tr>
           </table>
+
           <p class="bottomTxt">*仅限大陆CA开户用户</p>
         </div>
         <div class="footer">
-          <cube-checkbox class="with-click"
-                       v-model="agreeChecked">
-          我同意并授权玖富证券团队处理印花税事宜
-        </cube-checkbox>
+          <cube-checkbox class="with-click" v-model="agreeChecked">
+            我同意并授权玖富证券团队处理印花税事宜
+          </cube-checkbox>
         </div>
-        <div class="clickBtn">
+        <div class="clickBtn" @click="jumpTransferStk">
           <p>立即转仓</p>
         </div>
         <div class="closeBtn" @click="closeTransferPopup"></div>
       </div>
     </cube-popup>
 
+    <!-- 入金规则 -->
+    <cube-popup
+      type="my-popup"
+      position="center"
+      :mask-closable="false"
+      ref="depositRulePopup"
+    >
+      <div class="modelBox4">
+        <div class="content">
+          <table>
+            <tr>
+              <th>首次入金满</th>
+              <th>奖励股票</th>
+            </tr>
+            <tr v-for="(item, index) in depositRwList" :key="index">
+              <td>HKD{{ item.amount }}</td>
+              <td>{{ item.stkQuantity }}股{{ item.stkName }}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="clickBtn" @click="closeDepositRulePopup">
+          <p>我知道了</p>
+        </div>
+      </div>
+    </cube-popup>
+
+    <!-- 转仓规则 -->
+    <cube-popup
+      type="my-popup"
+      position="center"
+      :mask-closable="false"
+      ref="transferRulePopup"
+    >
+      <div class="modelBox5">
+        <div class="content">
+          <table>
+            <tr>
+              <th>首次转仓满</th>
+              <th>奖励股票</th>
+            </tr>
+            <tr v-for="(item, index) in transferRwList" :key="index">
+              <td>HK{{ item.amount }}</td>
+              <td>{{ item.stkQuantity }}股{{ item.stkName }}</td>
+            </tr>
+          </table>
+
+          <p class="bottomTxt">*仅限大陆CA开户用户</p>
+        </div>
+        <div class="clickBtn" @click="closeTransferRulePopup">
+          <p>我知道了</p>
+        </div>
+      </div>
+    </cube-popup>
+
+    <!--领取股票奖励模态框  -->
+    <template>
+      <cube-dialog
+        type="confirm"
+        :visible="visibleYHS"
+        @confirm="getStockSure"
+        @cancel="getStockCancel"
+        :confirmBtn="{ disabled: !argeementStatus }"
+      >
+        <div slot="content" class="yhs-dialog">
+          <div class="stock-name">
+            <span>{{ awardObj.stkName }}</span
+            >股票奖励
+          </div>
+          <div class="stock-bg"></div>
+          <div class="time">预计T+5工作日到账</div>
+          <div class="stock-info">
+            【<span>{{ awardObj.stkName }}{{ awardObj.assetId }}</span
+            >】{{ awardObj.quantity }}股
+          </div>
+          <div class="argeement">
+            <cube-checkbox v-model="argeementStatus">
+              我同意并授权玖富证券团队处理印花税事宜
+            </cube-checkbox>
+          </div>
+        </div>
+      </cube-dialog>
+    </template>
   </div>
 </template>
 
@@ -277,6 +366,13 @@ export default {
           stkName: '招商银行',
         },
       ], // 首次转仓奖励列表
+      awardObj: {
+        stkName:'招商银行',
+        assetId:'001254',
+        quantity: 3
+      }, // 奖励
+      visibleYHS: false, // dialog显示隐藏印花税
+      argeementStatus: false
     }
   },
   computed: {
@@ -412,6 +508,24 @@ export default {
         console.log('跳转至开户页面')
       }
     },
+
+    // 跳转至开户页面
+    jumpOpenAccount() {
+      const isNewOpen = this.urlObj['isnew']
+      handleAppOpen(window.OPEN_ACCOUNT, isNewOpen)
+    },
+
+    // 跳转至入金页面
+    jumpDeposit() {
+      const isNewOpen = this.urlObj['isnew']
+      handleAppOpen(window.GO_DEPOSIT, isNewOpen)
+    },
+    // 跳转至转仓页面
+    jumpTransferStk() {
+      const isNewOpen = this.urlObj['isnew']
+      handleAppOpen(window.GO_INTO_STOCK, isNewOpen)
+    },
+
     // 立即转仓点击按钮
     stockHandle() {
       const { openStatus } = this.openStatusObj
@@ -475,6 +589,55 @@ export default {
       component.hide()
     },
 
+   // 弹出【入金规则】模态框
+    showDepositRulePopup() {
+      const component = this.$refs.depositRulePopup
+      component.show()
+    },
+    // 关闭【入金规则】模态框
+    closeDepositRulePopup() {
+      const component = this.$refs.depositRulePopup
+      component.hide()
+    },
+
+   // 弹出【转仓规则】模态框
+    showTransferRulePopup() {
+      const component = this.$refs.transferRulePopup
+      component.show()
+    },
+    // 关闭【转仓规则】模态框
+    closeTransferRulePopup() {
+      const component = this.$refs.transferRulePopup
+      component.hide()
+    },
+    // 弹出赠股模态框
+    showStockBox() {
+      this.visibleYHS = true
+    },
+    // 赠股确认领取
+    getStockSure() {
+      const  { rewardId } = this.awardObj
+      const params = { rewardId }
+      console.log('params股票', params)
+
+      // 领取奖励
+      recordApi.postFetchRewardConfirm(params).then(res => {
+        this.queryStock(3)
+        console.log('确认领取==>', res)
+      })
+      this.visibleYHS = false
+    },
+    // 赠股取消模态框
+    getStockCancel() {
+      this.visibleYHS = false
+    },
+    // 点击【立即领取】
+    getReward(activeType) {
+      const type = activeType
+      const { openStatus } = this.openStatusObj
+      console.log('开户状态：'+JSON.stringify(openStatus))
+      console.log('立即领取:'+activeType)
+    }
   },
   created() {
     // 查询开户状态
