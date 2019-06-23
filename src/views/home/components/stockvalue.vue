@@ -1,23 +1,29 @@
 <template>
   <div :class="['wrap', `wrap-${skin}`]">
     <div class="left">
-      <div class="title">待领取股票市值（港币）</div>
-      <div class="value">503.21</div>
+      <div class="title">最大待领取股票市值（港币）</div>
+      <div class="value">{{ mktValueAll }}</div>
     </div>
     <div class="right">
       <div class="profit">今日盈亏</div>
-      <div class="number">+1.00</div>
-      <div class="percent">+0.27%</div>
+      <div v-if="changeAll > 0" class="number">+{{ changeAll }}</div>
+      <div v-if="changeAll === 0" class="number">{{ changeAll }}</div>
+      <div v-if="changeAll < 0" class="number">{{ changeAll }}</div>
+      <div v-if="changePctAll > 0" class="percent">+{{ changePctAll }}%</div>
+      <div v-if="changePctAll === 0" class="percent">{{ changePctAll }}%</div>
+      <div v-if="changePctAll < 0" class="percent">{{ changePctAll }}%</div>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-
-
+// import { formatNum } from '@/utils/number'
 export default {
   props: {
     skin: String,
+    mktValueAll: [String, Number],
+    changeAll: [String, Number],
+    changePctAll: [String, Number]
   },
 }
 </script>

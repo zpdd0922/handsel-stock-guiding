@@ -176,17 +176,17 @@ export default {
           : `${countryCode}-${account}`
       const phoneParmas = { phoneNum: certCode }
       switch (this.registerType) {
-        case 1:
-          // 默认注册
-          this.fetchRegister(phoneParmas)
-          break
-        case 2:
-          // 找回密码
-          this.fetchPasswordRest(phoneParmas)
-          break
-        default:
-          this.fetchRegister(phoneParmas)
-          break
+      case 1:
+        // 默认注册
+        this.fetchRegister(phoneParmas)
+        break
+      case 2:
+        // 找回密码
+        this.fetchPasswordRest(phoneParmas)
+        break
+      default:
+        this.fetchRegister(phoneParmas)
+        break
       }
     },
     fetchRegister(phoneParmas) {
@@ -241,21 +241,21 @@ export default {
       // 4.1验证通过
       if (isValid) {
         switch (this.registerType) {
-          case 1:
-            // 默认注册
-            this.submitRegister()
-            break
-          case 2:
-            // 找回密码
-            this.submitPasswordReset()
-            break
-          case 3:
-            // 手机号绑定
-            this.submitPhoneBind()
-            break
-          default:
-            this.submitRegister()
-            break
+        case 1:
+          // 默认注册
+          this.submitRegister()
+          break
+        case 2:
+          // 找回密码
+          this.submitPasswordReset()
+          break
+        case 3:
+          // 手机号绑定
+          this.submitPhoneBind()
+          break
+        default:
+          this.submitRegister()
+          break
         }
       }
     },

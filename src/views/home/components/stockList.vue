@@ -9,6 +9,7 @@
     </ul>
     <div class="contentList" v-for="(item, index) in stockList" :key="index">
       <ul class="stockContent">
+        <!-- 名称代码 -->
         <li class="stockItem">
           <p class="stkName">{{ item.stkName }}</p>
           <p>
@@ -16,41 +17,90 @@
             <span class="stkCode">{{ item.stkCode }}</span>
           </p>
         </li>
+        <!-- 可领数量 -->
         <li class="stockItem">
-          <p class="itemNum">
+          <p v-if="!item.maxNumber" class="itemNum">
+            <span>{{ item.minNumber }}</span>
+          </p>
+          <p v-else class="itemNum">
             <span>{{ item.minNumber }}</span>
             <span>~{{ item.maxNumber }}</span>
           </p>
         </li>
-        <li class="stockItem">
+        <!-- 市值 -->
+        <li v-if="!item.maxMktValue || item.maxMktValue === '0.00'" class="stockItem">
+          <p class="itemNum">
+            <span>{{ item.minMktValue }}</span>
+          </p>
+        </li>
+        <li v-else class="stockItem">
           <p class="itemTop">{{ item.minMktValue }}</p>
           <p class="itemBottom">~{{ item.maxMktValue }}</p>
         </li>
+        <!-- 现金成本 -->
         <li class="stockItem">
           <p class="itemTop">{{ item.price }}</p>
           <p class="itemBottom">{{ item.cost }}</p>
         </li>
-        <li class="stockItem">
-          <p class="itemTop">{{ item.minIncome }}</p>
-          <p class="itemBottom">~{{ item.maxIncome }}</p>
+        <!-- 收益 -->
+        <li v-if="!item.maxIncome || item.maxIncome === '0.00'" class="stockItem">
+          <p class="itemNum profitColor">
+            <span>{{ item.minIncome }}</span>
+          </p>
+        </li>
+        <li v-else class="stockItem">
+          <p class="itemTop profitColor">{{ item.minIncome }}</p>
+          <p class="itemBottom profitColor">~{{ item.maxIncome }}</p>
         </li>
       </ul>
+      <!-- 领取条件 -->
       <ul class="lineBox">
         <li class="leftPart">
           <p class="title">领取条件/有效期</p>
           <p>
-            <span v-if="item.activeType === 1" class="txtLeft">首次开户成功</span>
-            <span v-if="item.activeType === 2" class="txtLeft">首次入金成功<i class="question"></i> </span>
-            <span v-if="item.activeType === 5" class="txtLeft">首次转仓成功<i class="question"></i> </span>
-            <span class="txtRight">{{item.validityPeriod}}</span>
+            <span v-if="item.activeType === 1" class="txtLeft"
+              >首次开户成功</span
+            >
+            <span v-if="item.activeType === 2" class="txtLeft"
+              >首次入金成功<i
+                class="question"
+                @click="handleClickQuestion(item)"
+              ></i>
+            </span>
+            <span v-if="item.activeType === 3" class="txtLeft"
+              >首次转仓成功<i
+                class="question"
+                @click="handleClickQuestion(item)"
+              ></i>
+            </span>
+            <span class="txtRight">{{ item.validityPeriod }}</span>
           </p>
         </li>
         <!-- 按钮状态判断 -->
         <li class="rightPart">
-          <cube-button v-if="item.busType === 1" class="getbtn" @click="handleClick(item.activeType)">立即领取</cube-button>
-          <cube-button v-if="item.busType === 4" class="getbtn" disabled="disabled">入账中</cube-button>
-          <cube-button v-if="item.busType === 5" class="getbtn" disabled="disabled">已到账</cube-button>
-          <cube-button v-if="item.busType === 6" class="getbtn" disabled="disabled">已过期</cube-button>
+          <!-- 首先判断是否已过期 -->
+          <template v-if="item.isExpired === 1">
+            <cube-button
+              v-if="item.isExpired === 1"
+              class="getbtn"
+              disabled="disabled"
+              >已过期</cube-button
+            >
+          </template>
+          <!-- 然后判断按钮状态 -->
+          <template v-else>
+            <div v-if="item.busType === 4" class="btnBox">
+              <cube-button class="getbtn" disabled="disabled">入账中</cube-button>
+              <cube-button class="sharebtn" @click="handleClickShare(item)">分享</cube-button>
+            </div>
+            <div v-if="item.busType === 5" class="btnBox">
+              <cube-button class="getbtn" disabled="disabled">已到账</cube-button>
+              <cube-button class="sharebtn" @click="handleClickShare(item)">分享</cube-button>
+            </div>
+            <div v-if="item.busType < 4" class="btnBox">
+              <cube-button class="getbtn" @click="handleClick(item)">立即领取</cube-button>
+            </div>
+          </template>
         </li>
       </ul>
     </div>
@@ -58,69 +108,22 @@
 </template>
 
 <script type="text/ecmascript-6">
-
+// import { formatNum } from '@/utils/number'
 
 export default {
   props: {
     skin: String,
-  },
-  data() {
-    return {
-      stockList:[
-        {
-          stkName:'腾讯控股',  // 股票名称
-          stkCode:'00070',    // 股票代码
-          minNumber: 1,  // 最小领取数量
-          maxNumber: 10,  // 最大领取数量
-          minMktValue: 324.90,  // 最小市值
-          maxMktValue: 3249.00, // 最大市值
-          price: 324.90,     // 现价
-          cost: 0,              // 成本
-          minIncome: 324.90,    // 最小收益
-          maxIncome: 3249.00,   // 最大收益
-          activeType: 1,        // 奖励类型 1.开户 2.入金 5转仓
-          validityPeriod: '2019-09-21',
-          busType: 1           //  奖励状态：立即领取，4：入账中，5：已到账，已过期？
-        },
-        {
-          stkName:'腾讯控股',  // 股票名称
-          stkCode:'00070',    // 股票代码
-          minNumber: 1,  // 最小领取数量
-          maxNumber: 10,  // 最大领取数量
-          minMktValue: 324.90,  // 最小市值
-          maxMktValue: 3249.00, // 最大市值
-          price: 324.90,     // 现价
-          cost: 0,              // 成本
-          minIncome: 324.90,    // 最小收益
-          maxIncome: 3249.00,   // 最大收益
-          activeType: 2,        // 奖励类型 1.开户 2.入金 5转仓
-          validityPeriod: '2019-09-21',
-          busType: 4           //  奖励状态：立即领取，4：入账中，5：已到账，已过期？
-        },
-        {
-          stkName:'腾讯控股',  // 股票名称
-          stkCode:'00070',    // 股票代码
-          minNumber: 1,  // 最小领取数量
-          maxNumber: 10,  // 最大领取数量
-          minMktValue: 324.90,  // 最小市值
-          maxMktValue: 3249.00, // 最大市值
-          price: 324.90,     // 现价
-          cost: 0,              // 成本
-          minIncome: 324.90,    // 最小收益
-          maxIncome: 3249.00,   // 最大收益
-          activeType: 5,        // 奖励类型 1.开户 2.入金 5转仓
-          validityPeriod: '2019-09-21',
-          busType: 5           //  奖励状态：立即领取，4：入账中，5：已到账，已过期？
-        },
-      ]
-    }
-  },
-  mounted() {
-
+    stockList: Array
   },
   methods: {
-    handleClick(activeType){
-      this.$emit('getReward',activeType);
+    handleClick(item) {
+      this.$emit('getReward',item);
+    },
+    handleClickQuestion(item) {
+      this.$emit('getRule',item);
+    },
+    handleClickShare(item) {
+      this.$emit('goShare',item);
     }
   }
 }
@@ -139,7 +142,7 @@ export default {
     height: 60px;
     display: flex;
     background-color $white-theme-fff
-    border-1px('bottom', $white-theme-e5e5e5)
+    border-name(1px, $white-theme-e5e5e5, solid, bottom)
     .title {
       width 20%
       height:60px;
@@ -149,7 +152,8 @@ export default {
       line-height:60px;
       padding: 0 20px 0 0
       text-align right
-      border-1px('left', $white-theme-e5e5e5)
+      border-name(1px, $white-theme-e5e5e5, solid, left)
+      // border-1px('left', $white-theme-e5e5e5)
     }
     .title:first-child {
       width 22%
@@ -240,6 +244,9 @@ export default {
       margin-left 6px
       vertical-align middle
     }
+    .profitColor {
+      color: $white-theme-f95a29;
+    }
   }
 
   .lineBox {
@@ -248,7 +255,8 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-1px('bottom', $white-theme-e5e5e5)
+    // border-1px('bottom', $white-theme-e5e5e5)
+    border-name(1px, $white-theme-e5e5e5, solid, bottom)
     .leftPart {
       .title {
         font-size:24px;
@@ -275,7 +283,25 @@ export default {
         margin-left 20px
       }
     }
+    .btnBox{
+      width 100%
+      height 100%
+    }
     .getbtn {
+      display inline-block
+      width:140px;
+      height:54px;
+      border-radius:4px;
+      font-size:28px;
+      font-weight:400;
+      color:rgba(255,255,255,1);
+      line-height 28px
+      text-align center
+      padding 0
+    }
+    .sharebtn {
+      display inline-block
+      margin-left 20px
       width:140px;
       height:54px;
       border-radius:4px;
@@ -307,10 +333,12 @@ export default {
   background-color $black-theme-242426
   .titleHeader{
     background-color $black-theme-2a2a2d
-    border-1px('bottom', $white-theme-2e2e33)
+    border-name(1px, $white-theme-2e2e33, solid, bottom)
+    // border-1px('bottom', $white-theme-2e2e33)
     .title {
       color:$white-theme-999;
-      border-1px('left', $white-theme-2e2e33)
+      border-name(1px, $white-theme-2e2e33, solid, left)
+      // border-1px('left', $white-theme-2e2e33)
     }
   }
 

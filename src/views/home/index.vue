@@ -1,89 +1,41 @@
 <template>
   <div :class="['data-wrap', `data-wrap-${skin}`]">
-    <template v-if="noData">
-      <div class="no-data">
-        <div>暂无待领股票</div>
-      </div>
-    </template>
-    <cube-scroll :class="['bg-wrap', `bg-wrap-${skin}`]" v-if="hasData">
+    <cube-scroll :class="['bg-wrap', `bg-wrap-${skin}`]">
       <div :class="['container', `container-${skin}`]">
         <!-- 指引组件 -->
-        <template v-if="isHead">
+        <template v-if="depositStatus === 0">
           <!-- 待领取股票市值 -->
-          <Stockvalue :skin="skin"></Stockvalue>
+          <Stockvalue
+            :skin="skin"
+            :mktValueAll="mktValueAll"
+            :changeAll="changeAll"
+            :changePctAll="changePctAll"
+          ></Stockvalue>
 
           <!-- 指导框 -->
           <Heading
             :list="openStatusObj"
             :skin="skin"
             :urlObj="urlObj"
+            :headingStockOa="headingStockOa"
+            :headingStockDe="headingStockDe"
           ></Heading>
+          <div class="waitGetStock">
+            <p>待领取股票</p>
+          </div>
         </template>
-        <div class="waitGetStock">
-          <p>待领取股票</p>
-        </div>
+
         <!-- 待领取股票列表 -->
         <div class="stockTable">
-          <StockList :skin="skin" @getReward="getReward"></StockList>
-        </div>
-
-        <!-- 入金 -->
-        <div class="gold" :class="{ 'gold-mt': isHead === 1 }" v-if="noGold">
-          <Table
-            :list="goldList"
-            :header="headerGold"
-            :btnText="goldText"
-            :type="goldBusType"
+          <StockList
             :skin="skin"
-          >
-            <template slot="btn">
-              <div
-                class="btn-top"
-                :class="btnClass(goldBusType)"
-                @click="goldHandle"
-              >
-                {{ goldText }}
-              </div>
-            </template>
-          </Table>
-        </div>
-        <!-- 转仓 -->
-        <div class="stock" v-if="noStock">
-          <Table
-            :list="stockList"
-            :header="headerStock"
-            :btnText="stockText"
-            :type="stockBusType"
-            :skin="skin"
-          >
-            <template slot="btn">
-              <div
-                class="btn-top"
-                :class="btnClass(stockBusType)"
-                @click="stockHandle"
-              >
-                {{ stockText }}
-              </div>
-            </template>
-          </Table>
+            @getReward="getReward"
+            @getRule="getRule"
+            @goShare="goShare"
+            :stockList="newStockList"
+          ></StockList>
         </div>
       </div>
-      <cube-button @click="showOpenAccountPopup" style="height:80px"
-        >测试1</cube-button
-      >
-      <cube-button @click="showDepositPopup" style="height:80px"
-        >测试2</cube-button
-      >
-      <cube-button @click="showTransferPopup" style="height:80px"
-        >测试3</cube-button
-      >
-      <cube-button @click="showDepositRulePopup" style="height:80px"
-        >测试4</cube-button
-      >
-      <cube-button @click="showTransferRulePopup" style="height:80px"
-        >测试5</cube-button
-      >
-      <cube-button @click="showStockBox" style="height:80px">测试6</cube-button>
     </cube-scroll>
 
     <!-- 立即开户弹框 -->
@@ -98,14 +50,13 @@
           <p class="title">恭喜您</p>
         </div>
         <div class="content">
-          <p class="getStock">获取<span class="stkName">【招商银行】</span></p>
-          <h2 class="stkQuantity">3股</h2>
+          <p class="getStock">
+            获取<span class="stkName"
+              >【{{ openAccountRuleList.stkName }}】</span
+            >
+          </p>
+          <h2 class="stkQuantity">{{ openAccountRuleList.stkQuantity }}股</h2>
           <p class="tips">开户成功即可领取</p>
-        </div>
-        <div class="footer">
-          <cube-checkbox class="with-click" v-model="agreeChecked">
-            我同意并授权玖富证券团队处理印花税事宜
-          </cube-checkbox>
         </div>
         <div class="clickBtn" @click="jumpOpenAccount">
           <p>立即开户</p>
@@ -127,7 +78,8 @@
         </div>
         <div class="content">
           <p class="getStock">
-            获取<span class="stkName">【招商银行】</span>股票奖励，
+            获取<span class="stkName">【{{ depositRwStkName }}】</span
+            >股票奖励，
           </p>
           <p class="tips">入金满相应额度即可领取</p>
           <table>
@@ -136,16 +88,16 @@
               <th>奖励股票</th>
             </tr>
             <tr v-for="(item, index) in depositRwList" :key="index">
-              <td>HK{{ item.amount }}</td>
+              <td>{{ item.curreny }}{{ item.amount }}</td>
               <td>{{ item.stkQuantity }}股{{ item.stkName }}</td>
             </tr>
           </table>
         </div>
-        <div class="footer">
+        <!-- <div class="footer">
           <cube-checkbox class="with-click" v-model="agreeChecked">
             我同意并授权玖富证券团队处理印花税事宜
           </cube-checkbox>
-        </div>
+        </div> -->
         <div class="clickBtn" @click="jumpDeposit">
           <p>立即入金</p>
         </div>
@@ -166,7 +118,8 @@
         </div>
         <div class="content">
           <p class="getStock">
-            获取<span class="stkName">【招商银行】</span>股票奖励，
+            获取<span class="stkName">【{{ transferRwStkName }}】</span
+            >股票奖励，
           </p>
           <p class="tips">转仓市值满相应额度即可领取</p>
           <table>
@@ -175,18 +128,18 @@
               <th>奖励股票</th>
             </tr>
             <tr v-for="(item, index) in transferRwList" :key="index">
-              <td>HK{{ item.amount }}</td>
+              <td>{{ item.curreny }}{{ item.amount }}</td>
               <td>{{ item.stkQuantity }}股{{ item.stkName }}</td>
             </tr>
           </table>
 
           <p class="bottomTxt">*仅限大陆CA开户用户</p>
         </div>
-        <div class="footer">
+        <!-- <div class="footer">
           <cube-checkbox class="with-click" v-model="agreeChecked">
             我同意并授权玖富证券团队处理印花税事宜
           </cube-checkbox>
-        </div>
+        </div> -->
         <div class="clickBtn" @click="jumpTransferStk">
           <p>立即转仓</p>
         </div>
@@ -209,7 +162,7 @@
               <th>奖励股票</th>
             </tr>
             <tr v-for="(item, index) in depositRwList" :key="index">
-              <td>HKD{{ item.amount }}</td>
+              <td>{{ item.curreny }}{{ item.amount }}</td>
               <td>{{ item.stkQuantity }}股{{ item.stkName }}</td>
             </tr>
           </table>
@@ -235,7 +188,7 @@
               <th>奖励股票</th>
             </tr>
             <tr v-for="(item, index) in transferRwList" :key="index">
-              <td>HK{{ item.amount }}</td>
+              <td>{{ item.curreny }}{{ item.amount }}</td>
               <td>{{ item.stkQuantity }}股{{ item.stkName }}</td>
             </tr>
           </table>
@@ -253,7 +206,7 @@
       <cube-dialog
         type="confirm"
         :visible="visibleYHS"
-        @confirm="getStockSure"
+        @confirm="getStockSure()"
         @cancel="getStockCancel"
         :confirmBtn="{ disabled: !argeementStatus }"
       >
@@ -265,8 +218,11 @@
           <div class="stock-bg"></div>
           <div class="time">预计T+5工作日到账</div>
           <div class="stock-info">
-            【<span>{{ awardObj.stkName }}{{ awardObj.assetId }}</span
-            >】{{ awardObj.quantity }}股
+            【<span
+              >{{ awardObj.stkName }}{{ awardObj.stkCode }}.{{
+                awardObj.mktCode
+              }}</span
+            >】{{ awardObj.minNumber }}股
           </div>
           <div class="argeement">
             <cube-checkbox v-model="argeementStatus">
@@ -282,16 +238,15 @@
 <script type="text/ecmascript-6">
 import handleAppOpen from '@/utils/handleAppOpen'
 import { getURLParameters } from '@/utils/url'
+import { formatNum, mul } from '@/utils/number'
 import Heading from './components/heading.vue'
 import Stockvalue from './components/stockvalue.vue'
-import Table from './components/table.vue'
 import StockList from './components/stockList.vue'
 import recordApi from '@/api/api-record'
 
 export default {
   components: {
     Heading,
-    Table,
     Stockvalue,
     StockList
   },
@@ -302,92 +257,27 @@ export default {
   },
   data() {
     return {
-      agreeChecked: false, // 同意声明是否勾选
-      goldList: [], // 入金列表
-      stockList: [], // 转仓列表
-      goldText: '', // 入金按钮文案
-      stockText: '', // 转仓按钮文案
-      goldBusType: 0, // 列表显示内容变更
-      stockBusType: 0, // 列表显示内容变更
+      // agreeChecked: false, // 同意声明是否勾选
+      stockList: [], // 待领取股票列表
+      newStockList: [],
       openStatusObj: {}, // 开户状态列表
-      firstDeposit: {}, // 首次入金奖励规则
-      firstRollover: {}, // 首次转仓奖励规则
-      depositRwList:[
-        {
-          amount:10000,
-          stkQuantity: 1,
-          stkName: '招商银行',
-        },
-        {
-          amount:50001,
-          stkQuantity: 2,
-          stkName: '招商银行',
-        },
-        {
-          amount:100001,
-          stkQuantity: 3,
-          stkName: '招商银行',
-        },
-        {
-          amount:150001,
-          stkQuantity: 4,
-          stkName: '招商银行',
-        },
-        {
-          amount:200001,
-          stkQuantity: 5,
-          stkName: '招商银行',
-        },
-      ], // 首次入金奖励列表
-      transferRwList:[
-        {
-          amount:10000,
-          stkQuantity: 1,
-          stkName: '招商银行',
-        },
-        {
-          amount:50001,
-          stkQuantity: 2,
-          stkName: '招商银行',
-        },
-        {
-          amount:100001,
-          stkQuantity: 3,
-          stkName: '招商银行',
-        },
-        {
-          amount:150001,
-          stkQuantity: 4,
-          stkName: '招商银行',
-        },
-        {
-          amount:200001,
-          stkQuantity: 5,
-          stkName: '招商银行',
-        },
-      ], // 首次转仓奖励列表
-      awardObj: {
-        stkName:'招商银行',
-        assetId:'001254',
-        quantity: 3
-      }, // 奖励
+      mktValueAll: 0, // 最大待领取股票市值
+      changeAll: 0, // 涨跌额
+      changePctAll: 0, // 涨跌幅
+      openAccountRuleList: {}, // 开户入金奖励
+      depositRwList:[], // 首次入金奖励列表
+      depositRwStkName: '', // 首次入金奖励股票
+      transferRwList:[], // 首次转仓奖励列表
+      transferRwStkName:'', // 首次转仓奖励股票
+      awardObj: {}, // 奖励
       visibleYHS: false, // dialog显示隐藏印花税
-      argeementStatus: false
+      argeementStatus: false,
+      headingStockOa: {}, // 开户待领取股票对象
+      headingStockDe: {}, // 入金待领取股票对象
+      depositStatus: 0, // 是否入金
     }
   },
   computed: {
-    headerGold() {
-      return [
-        { label: '首次入金', class: 'left' },
-        { label: '奖励股票或免佣', class: 'right' }
-      ]
-    },
-    headerStock() {
-      return [
-        { label: '首次转仓', class: 'left' },
-        { label: '奖励股票或免佣', class: 'right' }
-      ]
-    },
     urlObj() {
       return getURLParameters()
     },
@@ -397,44 +287,12 @@ export default {
     isHead() {
       return this.urlObj['isHead']
     },
-    // 有卡片显示
-    hasData() {
-      return (
-        (this.goldBusType !== 2 &&
-          this.goldBusType !== 5 &&
-          this.goldBusType !== 6) ||
-        (this.stockBusType !== 2 &&
-          this.stockBusType !== 5 &&
-          this.stockBusType !== 6)
-      )
-    },
-    // 无卡片显示
-    noData() {
-      return (
-        (this.goldBusType === 2 ||
-          this.goldBusType === 5 ||
-          this.goldBusType === 6) &&
-        (this.stockBusType === 2 ||
-          this.stockBusType === 5 ||
-          this.stockBusType === 6)
-      )
-    },
-    // 判断是否有入金奖励
-    noGold() {
-      return (
-        this.goldBusType !== 2 &&
-        this.goldBusType !== 5 &&
-        this.goldBusType !== 6
-      )
-    },
-    // 判断是否有转仓奖励
-    noStock() {
-      return (
-        this.stockBusType !== 2 &&
-        this.stockBusType !== 5 &&
-        this.stockBusType !== 6
-      )
-    }
+  },
+  created() {
+    // 查询开户状态
+    this.getOpenStatus()
+    // 查询待领取股票
+    this.getWaitReceiveStock()
   },
   methods: {
     // 查询开户状态
@@ -442,71 +300,94 @@ export default {
       recordApi.getOpenStatus({ openType: 1 }).then(res => {
         console.log('查询开户状态res', res)
         this.openStatusObj = res
+        this.depositStatus = res.depositStatus  // 是否入金
       })
     },
-    // 查询首次入金奖励
-    queryGlodList() {
-      recordApi.getFirstDeposit().then(res => {
-        console.log('首次入金res', res)
-        this.firstDeposit = res
-        const { busType, rewardRuleList, waitReceiveRecordInfo } = res
-        this.goldBusType = busType
-        if (busType === 0) {
-          this.goldList = rewardRuleList
-          this.goldText = '立即入金'
-        } else if (busType === 1) {
-          this.goldList = rewardRuleList
-          this.goldText = '已提交'
-        } else if (busType === 3) {
-          this.goldList.push(waitReceiveRecordInfo)
-          this.goldText = '立即领取'
-        } else if (busType === 4) {
-          this.goldList.push(waitReceiveRecordInfo)
-          this.goldText = '到账中'
+    // 查询待领取股票
+    getWaitReceiveStock() {
+      recordApi.getWaitReceiveStock().then(res => {
+        console.log('待领取股票res', res)
+        const stockList = res.stockList
+        this.stockList = res.stockList
+        this.mktValueAll = formatNum(res.mktValueAll)
+        this.changeAll = formatNum(res.changeAll)
+        const changePctAll = mul(res.changePctAll,100)
+        this.changePctAll = formatNum(changePctAll)
+        // 将数组里的某些字段数字格式化，保留两位小数
+        let newStockArr = []
+        for(let index in stockList){
+          const {
+            stkName,
+            stkCode,
+            mktCode,
+            minNumber,
+            maxNumber,
+            minMktValue:minMktValue,
+            maxMktValue:maxMktValue,
+            price:price,
+            cost:cost,
+            minIncome:minIncome,
+            maxIncome:maxIncome,
+            busType,
+            activeType,
+            validityPeriod,
+            rewardId,
+            configItemId,
+            isExpired,
+            ruleList
+           } = stockList[index]
+          const FTminMktValue = formatNum(minMktValue)
+          const FTmaxMktValue = formatNum(maxMktValue)
+          const FTprice = formatNum(price)
+          const FTminIncome = formatNum(minIncome)
+          const FTmaxIncome = formatNum(maxIncome)
+          const stockObj ={
+            stkName,
+            stkCode,
+            mktCode,
+            minNumber,
+            maxNumber,
+            minMktValue:FTminMktValue,
+            maxMktValue:FTmaxMktValue,
+            price:FTprice,
+            cost,
+            minIncome:FTminIncome,
+            maxIncome:FTmaxIncome,
+            busType,
+            activeType,
+            validityPeriod,
+            rewardId,
+            configItemId,
+            isExpired,
+            ruleList
+          }
+          newStockArr.push(stockObj)
+          // 获取对应的领取奖励规则
+          if(stockList[index].activeType === 1) {
+            this.openAccountRuleList = stockList[index].ruleList[0]
+            const RwObj = {
+              stkName:stockList[index].stkName,
+              minNumber:stockList[index].minNumber
+            }
+            this.headingStockOa = RwObj
+          }
+          if(stockList[index].activeType === 2) {
+            this.depositRwList = stockList[index].ruleList
+            this.depositRwStkName = stockList[index].ruleList[0].stkName || ''
+            const RwObj = {
+              stkName:stockList[index].stkName,
+              minNumber:stockList[index].minNumber
+            }
+            this.headingStockDe = RwObj
+          }
+          if(stockList[index].activeType === 3) {
+            this.transferRwList = stockList[index].ruleList
+            this.transferRwStkName = stockList[index].ruleList[0].stkName || ''
+          }
         }
+        this.newStockList = newStockArr
+        console.log('this.newstockList', this.newStockList)
       })
-    },
-    // 查询首次转仓奖励
-    queryStockList() {
-      recordApi.getFirstRollover().then(res => {
-        console.log('转仓入金res', res)
-        this.firstRollover = res
-        const { busType, rewardRuleList, waitReceiveRecordInfo } = res
-        this.stockBusType = busType
-        if (busType === 0) {
-          this.stockList = rewardRuleList
-          this.stockText = '立即转仓'
-        } else if (busType === 1) {
-          this.stockList = rewardRuleList
-          this.stockText = '已提交'
-        } else if (busType === 3) {
-          this.stockList.push(waitReceiveRecordInfo)
-          this.stockText = '立即领取'
-        } else if (busType === 4) {
-          this.stockList.push(waitReceiveRecordInfo)
-          this.stockText = '到账中'
-        }
-      })
-    },
-    // 立即入金点击按钮
-    goldHandle() {
-      const { openStatus } = this.openStatusObj
-      const { busType } = this.firstDeposit
-      const isNewOpen = this.urlObj['isnew']
-      if (openStatus === 0) {
-        if (busType === 0 || busType === 1) {
-          console.log('跳转至入金页面')
-          handleAppOpen(window.GO_DEPOSIT, isNewOpen)
-        } else if (busType === 3) {
-          console.log('跳转至奖品中心页面')
-          handleAppOpen(window.ACTIVE_CENTER_GOLD, isNewOpen)
-        } else if (busType === 4) {
-          console.log('按钮不可点')
-        }
-      } else {
-        handleAppOpen(window.OPEN_ACCOUNT, isNewOpen)
-        console.log('跳转至开户页面')
-      }
     },
 
     // 跳转至开户页面
@@ -514,7 +395,6 @@ export default {
       const isNewOpen = this.urlObj['isnew']
       handleAppOpen(window.OPEN_ACCOUNT, isNewOpen)
     },
-
     // 跳转至入金页面
     jumpDeposit() {
       const isNewOpen = this.urlObj['isnew']
@@ -526,37 +406,8 @@ export default {
       handleAppOpen(window.GO_INTO_STOCK, isNewOpen)
     },
 
-    // 立即转仓点击按钮
-    stockHandle() {
-      const { openStatus } = this.openStatusObj
-      const { busType } = this.firstRollover
-      const isNewOpen = this.urlObj['isnew']
-      if (openStatus === 0) {
-        if (busType === 0 || busType === 1) {
-          handleAppOpen(window.GO_INTO_STOCK, isNewOpen)
-          console.log('跳转至转仓页面')
-        } else if (busType === 3) {
-          handleAppOpen(window.ACTIVE_CENTER_STOCK, isNewOpen)
-          console.log('跳转至奖品中心页面')
-        } else if (busType === 4) {
-          console.log('按钮不可点')
-        }
-      } else {
-        handleAppOpen(window.OPEN_ACCOUNT, isNewOpen)
-        console.log('跳转至开户页面')
-      }
-    },
-    // 按钮样式
-    // 0:未入金或未转仓 1:已入金或以转仓 2:有待领取的奖励 3:已到账 4:已入持仓
-    // 0:未入金或未转仓 1:已入金或以转仓 2:入金或转仓未达到奖励条件 3:有待领取的奖励 4:已到账 5:已入持仓
-    btnClass(val) {
-      return {
-        commit: val === 0 || val === 1,
-        draw: val === 3,
-        disabled: val === 4
-      }
-    },
-   // 弹出【立即开户】模态框
+
+    // 弹出【立即开户】模态框
     showOpenAccountPopup() {
       const component = this.$refs.openAccountPopup
       component.show()
@@ -567,7 +418,7 @@ export default {
       component.hide()
     },
 
-   // 弹出【立即入金】模态框
+    // 弹出【立即入金】模态框
     showDepositPopup() {
       const component = this.$refs.depositPopup
       component.show()
@@ -578,7 +429,7 @@ export default {
       component.hide()
     },
 
-   // 弹出【立即转仓】模态框
+    // 弹出【立即转仓】模态框
     showTransferPopup() {
       const component = this.$refs.transferPopup
       component.show()
@@ -589,7 +440,7 @@ export default {
       component.hide()
     },
 
-   // 弹出【入金规则】模态框
+    // 弹出【入金规则】模态框
     showDepositRulePopup() {
       const component = this.$refs.depositRulePopup
       component.show()
@@ -600,7 +451,7 @@ export default {
       component.hide()
     },
 
-   // 弹出【转仓规则】模态框
+    // 弹出【转仓规则】模态框
     showTransferRulePopup() {
       const component = this.$refs.transferRulePopup
       component.show()
@@ -616,35 +467,71 @@ export default {
     },
     // 赠股确认领取
     getStockSure() {
-      const  { rewardId } = this.awardObj
-      const params = { rewardId }
-      console.log('params股票', params)
+      const  { rewardId, configItemId } = this.awardObj
+      const params = { rewardId, configItemId }
 
       // 领取奖励
       recordApi.postFetchRewardConfirm(params).then(res => {
-        this.queryStock(3)
         console.log('确认领取==>', res)
       })
       this.visibleYHS = false
+      this.getWaitReceiveStock()
     },
     // 赠股取消模态框
     getStockCancel() {
       this.visibleYHS = false
     },
     // 点击【立即领取】
-    getReward(activeType) {
-      const type = activeType
-      const { openStatus } = this.openStatusObj
-      console.log('开户状态：'+JSON.stringify(openStatus))
-      console.log('立即领取:'+activeType)
+    getReward(item) {
+      const activeType = item.activeType
+      const busType = item.busType
+      if(busType === 0 || busType === 1 || busType === 2) {
+        // 开户奖励规则弹框
+        if(activeType === 1) {
+          this.showOpenAccountPopup()
+        }
+        // 入金奖励规则弹框
+        if(activeType === 2) {
+          this.showDepositPopup()
+        }
+        // 转仓奖励规则弹框
+        if(activeType === 3) {
+          this.showTransferPopup()
+        }
+      }
+      if(busType === 3) {
+        this.awardObj = item
+        this.showStockBox()
+      }
+    },
+    // 点击【问号】
+    getRule(item) {
+      const type = item.activeType
+      // 入金奖励
+      if(type === 2) {
+        this.showDepositRulePopup()
+      }
+      // 转仓奖励
+      if(type === 3) {
+        this.showTransferRulePopup()
+      }
+    },
+    // 点击分享
+    goShare(item) {
+      const {
+        stkName,
+        minNumber,
+        minIncome
+      } = item
+      const params ={
+        stkName,
+        minNumber,
+        minIncome
+      }
+      console.log('params:'+JSON.stringify(params))
     }
   },
-  created() {
-    // 查询开户状态
-    this.getOpenStatus()
-    this.queryGlodList()
-    this.queryStockList()
-  }
+
 }
 </script>
 

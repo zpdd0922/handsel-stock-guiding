@@ -2,6 +2,10 @@ import axios from '../axios/index'
 import paramsData from '../params/params-wrap'
 
 export default {
+  // 待领取股票接口查询
+  getWaitReceiveStock: data =>
+    axios.post('/reward_center_api/wait_receive_stock', paramsData.WRAP(data)),
+
   /**
    * 获取开户状态
    * @method POST/JSON open_api/processstep
@@ -22,40 +26,34 @@ export default {
    */
   getOpenStatus: data =>
     axios.post('open_api/processstep', paramsData.WRAP(data)),
+
+  // 查询用户状态
   /**
-   * 首次入金奖励规则
-   * busType
-   * 0 未入金或未转仓
-   * 1 已入金或以转仓
-   * 2 入金或转仓未达到奖励条件
-   * 3 有待领取的奖励
-   * 4 已到账
-   * 5 已入持仓
-   * 6 已拒绝
-   */
-  getFirstDeposit: data =>
-    axios.post('reward_center_api/first_deposit_rule', paramsData.COMMON(data)),
+   * @returns result<Object>
+   * depositStatus:      入金状态， 1 已入金； 0 未入金
+   * openAccountStatus:    开户状态，1 已开户； 0 未开户
+   * tradeAccount:     交易账号
+   * tradeStatus:      交易状态 1 已交易； 0 未交易
+   * transferStatus:    转仓状态，1 已转仓； 0 未转仓
+   * userRegStatus:     开户状态，1 已注册； 0 未注册
+   * withdrawalStatus:   出金状态， 1 已出金； 0 未出金
+   * */
+  findCrmUserStatus: data =>
+    axios.post('/open_api/findCrmUserStatus', paramsData.COMMON(data)),
 
   /**
-   * 首次转仓奖励规则
-   * busType
-   * 0 未入金或未转仓
-   * 1 已入金或以转仓
-   * 2 入金或转仓未达到奖励条件
-   * 3 有待领取的奖励
-   * 4 已到账
-   * 5 已入持仓
-   * 6 已拒绝
+   * 获取开户方式 - 进入对应入金地址
+   *
+   * @return JSON { code: integer, message: string, result: { bankType } }
+   * bankType ==> 银行账户类型 [0-香港银行卡 1-大陆银行卡]
    */
-  getFirstRollover: data =>
+  getOpenBankType: data =>
+    axios.post('/open_api/get_open_bank_type', paramsData.COMMON(data)),
+
+  // 确认领取奖励
+  postFetchRewardConfirm: data =>
     axios.post(
-      'reward_center_api/first_rollover_rule',
+      '/reward_center_api/fetch_reward_confirm',
       paramsData.COMMON(data)
-    ),
-
-  /**
-   * 赠股记录
-   */
-  getFindHandselStock: data =>
-    axios.post('reward_center_api/find_handsel_stock', paramsData.COMMON(data))
+    )
 }
