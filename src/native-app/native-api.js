@@ -94,3 +94,8 @@ export function shareAppAction(res) {
 export function getMobileInfo(res) {
   JsToNative('getMobileInfo', res)
 }
+
+// 唤醒分享二维码接口
+export function giftStockShare(res) {
+  JsToNative('giftStockShare', res)
+}

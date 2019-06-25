@@ -3,7 +3,7 @@
     <cube-scroll :class="['bg-wrap', `bg-wrap-${skin}`]">
       <div :class="['container', `container-${skin}`]">
         <!-- 指引组件 -->
-        <template v-if="depositStatus === 0">
+        <template v-if="isHead">
           <!-- 待领取股票市值 -->
           <Stockvalue
             :skin="skin"
@@ -243,6 +243,7 @@ import Heading from './components/heading.vue'
 import Stockvalue from './components/stockvalue.vue'
 import StockList from './components/stockList.vue'
 import recordApi from '@/api/api-record'
+import { giftStockShare } from '@/native-app/native-api'
 
 export default {
   components: {
@@ -525,10 +526,12 @@ export default {
       } = item
       const params ={
         stkName,
-        minNumber,
-        minIncome
+        stkQuantity:minNumber,
+        mktValue:minIncome,
+        shareUrl: window.SHARE_ADDRESS
       }
       console.log('params:'+JSON.stringify(params))
+      giftStockShare(params)
     }
   },
 

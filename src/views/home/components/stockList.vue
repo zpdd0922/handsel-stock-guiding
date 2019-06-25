@@ -28,7 +28,10 @@
           </p>
         </li>
         <!-- 市值 -->
-        <li v-if="!item.maxMktValue || item.maxMktValue === '0.00'" class="stockItem">
+        <li
+          v-if="!item.maxMktValue || item.maxMktValue === '0.00'"
+          class="stockItem"
+        >
           <p class="itemNum">
             <span>{{ item.minMktValue }}</span>
           </p>
@@ -43,7 +46,10 @@
           <p class="itemBottom">{{ item.cost }}</p>
         </li>
         <!-- 收益 -->
-        <li v-if="!item.maxIncome || item.maxIncome === '0.00'" class="stockItem">
+        <li
+          v-if="!item.maxIncome || item.maxIncome === '0.00'"
+          class="stockItem"
+        >
           <p class="itemNum profitColor">
             <span>{{ item.minIncome }}</span>
           </p>
@@ -90,15 +96,25 @@
           <!-- 然后判断按钮状态 -->
           <template v-else>
             <div v-if="item.busType === 4" class="btnBox">
-              <cube-button class="getbtn" disabled="disabled">入账中</cube-button>
-              <cube-button class="sharebtn" @click="handleClickShare(item)">分享</cube-button>
+              <cube-button class="getbtn" disabled="disabled"
+                >入账中</cube-button
+              >
+              <cube-button class="sharebtn" @click="handleClickShare(item)"
+                >分享</cube-button
+              >
             </div>
             <div v-if="item.busType === 5" class="btnBox">
-              <cube-button class="getbtn" disabled="disabled">已到账</cube-button>
-              <cube-button class="sharebtn" @click="handleClickShare(item)">分享</cube-button>
+              <cube-button class="getbtn" disabled="disabled"
+                >已到账</cube-button
+              >
+              <cube-button class="sharebtn" @click="handleClickShare(item)"
+                >分享</cube-button
+              >
             </div>
             <div v-if="item.busType < 4" class="btnBox">
-              <cube-button class="getbtn" @click="handleClick(item)">立即领取</cube-button>
+              <cube-button class="getbtn" @click="handleClick(item)"
+                >立即领取</cube-button
+              >
             </div>
           </template>
         </li>

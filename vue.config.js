@@ -10,9 +10,9 @@ const resolve = dir => path.join(__dirname, dir)
 let proxy = {}
 const prefixs = ['/capt', '/user_api']
 
-const target = 'http://10.1.5.126:9003' // 开发服务器
+// const target = 'http://10.1.5.126:9003' // 开发服务器
 
-// const target = 'http://121.35.249.14:9003' // 测试服务器
+const target = 'http://121.35.249.14:9003' // 测试服务器
 
 // const target = 'http://10.1.2.3:9003' // 彭峰
 
