@@ -1,10 +1,11 @@
 
-@import '~common/stylus/variable'
-@import '~common/stylus/mixin'
+@import '~assets/stylus/variable'
+@import '~assets/stylus/mixin'
 
 // 主容器
 .login-container
   height 100%
+  background $color-fff
   position relative
 
 // 菜单栏
@@ -20,8 +21,8 @@
     color $color-999
     border-name(2px, #e5e5e5, solid, bottom)
   .active
-    color $color-sub-theme
-    border-color $color-sub-theme
+    color $color-theme-sub
+    border-color $color-theme-sub
     &:after
       content '\0020'
       position absolute
@@ -71,7 +72,7 @@
     color $color-fff
     background-color $color-ccc
     &.active
-      background-color $color-sub-theme
+      background-color $color-theme-sub
   .item-captcha
     width 200px
     height 100px
@@ -97,14 +98,14 @@
     .icon-eye
       width 40px
       height 40px
-      posCenter()
+      pos-center()
       background-size contain
       background-repeat no-repeat
       background-position center center
     .icon-eye-open
-      background-image url('../../common/image/login/icon-eye-open.png')
+      background-image url('./images/icon-eye-open.png')
     .icon-eye-close
-      background-image url('../../common/image/login/icon-eye-close.png')
+      background-image url('./images/icon-eye-close.png')
 
   .item-link
     padding-top 10px

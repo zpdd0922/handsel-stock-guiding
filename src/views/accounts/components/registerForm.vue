@@ -4,49 +4,48 @@
       <div class="form-item">
         <div class="item-input">
           <span @click="handleShowCountryList" class="item-country">
-            +{{ countryCode }}
+            +{{countryCode}}
           </span>
-          <input
-            v-model.trim="loginForm.certCode"
-            type="text"
-            placeholder="请输入手机号码"
-          />
+          <input v-model.trim="loginForm.certCode"
+                 @blur="handlHackIosBlur"
+                 type="text"
+                 maxlength="20"
+                 placeholder="请输入手机号码">
         </div>
-        <div class="item-tips error-msg">{{ loginRules.certCode.tips }}</div>
+        <div class="item-tips error-msg">{{loginRules.certCode.tips}}</div>
       </div>
       <div class="form-item">
         <div class="item-input">
-          <input
-            v-model.trim="loginForm.captcha"
-            type="text"
-            placeholder="请输入短信验证码"
-          />
+          <input v-model.trim="loginForm.captcha"
+                 @blur="handlHackIosBlur"
+                 type="text"
+                 maxlength="4"
+                 placeholder="请输入短信验证码">
           <span :class="itemCodeClass" @click="handleSendCode">
-            {{ captchaTips }}
+            {{captchaTips}}
           </span>
         </div>
-        <div class="item-tips error-msg">{{ loginRules.captcha.tips }}</div>
+        <div class="item-tips error-msg">{{loginRules.captcha.tips}}</div>
       </div>
       <div class="form-item">
         <div class="item-input">
-          <input
-            v-model.trim="loginForm.pwd"
-            :type="passwordType"
-            :placeholder="placeholder"
-          />
+          <input v-model.trim="loginForm.pwd"
+                 @blur="handlHackIosBlur"
+                 maxlength="16"
+                 :type="passwordType"
+                 :placeholder="placeholder">
           <span class="item-icon" @click="handleTogglePassword">
             <i :class="iconEyeClass"></i>
           </span>
         </div>
-        <div class="item-tips error-msg">{{ loginRules.pwd.tips }}</div>
+        <div class="item-tips error-msg">{{loginRules.pwd.tips}}</div>
       </div>
 
       <div class="form-item form-btn">
-        <cube-button :disabled="isDisabled" @click="handleSubmit">{{
-          submitText
-        }}</cube-button>
+        <cube-button :disabled="isDisabled" @click="handleSubmit">{{submitText}}</cube-button>
       </div>
     </div>
+
     <template v-if="showCountryList">
       <country-list @selectItem="selectItem" />
     </template>
@@ -54,18 +53,19 @@
 </template>
 
 <script type="text/ecmascript-6">
-import { param2Obj } from '@/utils/url'
-import { HOST } from '@/api/config/index'
+import { getURLParameters } from '@/utils/url'
 import { toast } from '@/utils/tips'
 import validate from '@/utils/validate'
 import androidFocus from '@/mixins/android-focus'
+import iosWXFocus from '@/mixins/ios-wx-focus'
 
 const defaultPassword = 'password'
+const defaultTimeOut = 60
 const defaultCountryCode = '86'
-const defaultCaptchaTips = '发送验证码'
+const defaultCaptchaTips = '获取验证码'
 
 export default {
-  mixins: [androidFocus],
+  mixins: [androidFocus, iosWXFocus],
   props: {
     registerType: {
       type: Number,
@@ -88,7 +88,7 @@ export default {
       showCountryList: false,
       isSendCode: false,
       timer: null,
-      timeout: 60,
+      timeout: defaultTimeOut,
       loginForm: {
         certCode: '',
         pwd: '',
@@ -123,7 +123,7 @@ export default {
     itemCodeClass() {
       return {
         'item-code': true,
-        active: this.isCanSend && !this.isSendCode
+        'active': this.isCanSend && !this.isSendCode
       }
     },
     iconEyeClass() {
@@ -151,7 +151,7 @@ export default {
       const account = this.loginForm.certCode
 
       if (countryCode === defaultCountryCode && !validate.isMobile(account)) {
-        this.loginRules.certCode.tips = '请输入正确的手机号码'
+        this.loginRules.certCode.tips = '请输入有效的手机号码'
         return false
       } else {
         this.loginRules.certCode.tips = ''
@@ -170,10 +170,7 @@ export default {
 
       // 发送中
       this.isSendCode = true
-      const certCode =
-        countryCode === defaultCountryCode
-          ? account
-          : `${countryCode}-${account}`
+      const certCode = countryCode === defaultCountryCode ? account : `${countryCode}-${account}`
       const phoneParmas = { phoneNum: certCode }
       switch (this.registerType) {
       case 1:
@@ -191,28 +188,33 @@ export default {
     },
     fetchRegister(phoneParmas) {
       // 检测手机号
-      this.$store.dispatch('checkMobile', phoneParmas).then(res => {
-        const { isReg } = res
-        if (isReg === 'Y') {
-          toast({
-            type: 'error',
-            txt: '手机号已被其他用户注册',
-            callback: () => {
-              this.handleSendCodeFail()
-            }
-          })
-          return false
-        }
-        this.fetchPasswordRest(phoneParmas)
-      })
+      this.$store.dispatch('checkMobile', phoneParmas)
+        .then(res => {
+          const { isReg } = res
+          if (isReg === 'Y') {
+            toast({
+              type: 'error',
+              txt: '手机号已被其他用户注册',
+              callback: () => {
+                this.handleSendCodeFail()
+              }
+            })
+            return false
+          }
+          this.fetchPasswordRest(phoneParmas)
+        })
     },
     fetchPasswordRest(phoneParmas) {
       const codeParams = Object.assign({}, { certType: 0 }, phoneParmas)
-      this.$store.dispatch('sendCode', codeParams).then(code => {
-        // 发送完成
-        const { eventId } = code
-        this.loginForm.eventId = eventId
-      })
+      this.$store.dispatch('sendCode', codeParams)
+        .then(code => {
+          // 发送完成
+          const { eventId } = code
+          this.loginForm.eventId = eventId
+        })
+        .catch(() => {
+          this.handleSendCodeFail()
+        })
     },
     // 倒计时
     timeClock() {
@@ -225,6 +227,7 @@ export default {
     handleSendCodeFail() {
       clearTimeout(this.timer)
       this.isSendCode = false
+      this.timeout = defaultTimeOut
       this.captchaTips = defaultCaptchaTips
     },
     // 2.切换登录密码是否明文
@@ -262,95 +265,77 @@ export default {
     submitPhoneBind() {
       const countryCode = this.countryCode
       const account = this.loginForm.certCode
-      const phoneNum =
-        countryCode === defaultCountryCode
-          ? account
-          : `${countryCode}-${account}`
+      const phoneNum = countryCode === defaultCountryCode ? account : `${countryCode}-${account}`
 
       const params = Object.assign({}, this.loginForm, { phoneNum })
-      this.$store.dispatch('updateMobile', params).then(() => {
-        toast({
-          type: 'correct',
-          txt: '绑定成功',
-          callback: this.handleLoginSuccess
+      this.$store.dispatch('updateMobile', params)
+        .then(() => {
+          toast({
+            type: 'correct',
+            txt: '绑定成功',
+            callback: this.handleLoginSuccess
+          })
         })
-      })
     },
     submitPasswordReset() {
       const countryCode = this.countryCode
       const newPwd = this.loginForm.pwd
       const account = this.loginForm.certCode
-      const phoneNum =
-        countryCode === defaultCountryCode
-          ? account
-          : `${countryCode}-${account}`
+      const phoneNum = countryCode === defaultCountryCode ? account : `${countryCode}-${account}`
 
       const params = Object.assign({}, this.loginForm, { phoneNum, newPwd })
-      this.$store.dispatch('resetPassword', params).then(() => {
-        toast({
-          type: 'correct',
-          txt: '操作成功，请返回重新登录',
-          time: 1000,
-          callback: this.handlePasswordSuccess
+      this.$store.dispatch('resetPassword', params)
+        .then(() => {
+          toast({
+            type: 'correct',
+            txt: '操作成功，请返回重新登录',
+            time: 1000,
+            callback: this.handlePasswordSuccess
+          })
         })
-      })
     },
     submitRegister() {
-      const {
-        channelId = 1,
-        invUserId = 1,
-        utm_source = 'Web',
-        utm_medium = 'mobile-pc',
-        sourceCode = ''
-      } = param2Obj()
+      const { channelId = 1, invUserId = 1, utm_source = 'Web', utm_medium = 'mobile-pc', sourceCode = '' } = getURLParameters()
 
       const countryCode = this.countryCode
       const account = this.loginForm.certCode
-      const certCode =
-        countryCode === defaultCountryCode
-          ? account
-          : `${countryCode}-${account}`
+      const certCode = countryCode === defaultCountryCode ? account : `${countryCode}-${account}`
       const certType = 0
 
-      const params = Object.assign({}, this.loginForm, {
-        certCode,
-        certType,
-        invUserId,
-        sourceCode,
-        userSourceChannelId: channelId,
-        regSourceType: utm_source,
-        regSource: utm_medium
-      })
-      this.$store.dispatch('register', params).then(() => {
-        toast({
-          type: 'correct',
-          txt: '注册成功，请返回重新登录',
-          time: 2000,
-          callback: this.getUserType(this.handleLoginSuccess)
+      const params = Object.assign({}, this.loginForm, { certCode, certType, invUserId, sourceCode, userSourceChannelId: channelId, regSourceType: utm_source, regSource: utm_medium })
+      this.$store.dispatch('register', params)
+        .then(res => {
+          toast({
+            type: 'correct',
+            txt: '注册成功，请返回重新登录',
+            time: 2000,
+            callback: this.getUserType(this.handleLoginSuccess)
+          })
         })
-      })
     },
     // 5.判断用户类型
     getUserType(callback) {
-      this.$store.dispatch('getUserType').then(res => {
-        // 5.1判断用户
-        if (res && res.type === 2) {
-          // 5.1.1登出
-          this.$store.dispatch('logout')
-          // 5.1.2重定向去玖富股票APP下载
-          location.href = `${HOST}webstatic/downApp/download_stock.html`
-        }
-        // 5.2回调登录成功函数
-        callback && callback()
-      })
+      this.$store.dispatch('getUserType')
+        .then(res => {
+          // 5.1判断用户
+          if (res && res.type === 2) {
+            // 5.1.1登出
+            this.$store.dispatch('logout')
+            // 5.1.2重定向去玖富股票APP下载
+            location.href = window.STOCK_DOWNLOAD
+          }
+          // 5.2回调登录成功函数
+          callback && callback()
+        })
     },
     // 6.找回密码成功
     handlePasswordSuccess() {
       // 找回密码后 --> 登出 -> 回登录页 --> 重新登录
-      this.$store.dispatch('logout').then(() => {
-        const { redirect = '/' } = this.query
-        this.$router.replace({ name: 'login', query: { redirect } })
-      })
+      this.$store.dispatch('logout')
+        .then(() => {
+          const { redirect = '/' } = this.query
+          this.$router.replace({ name: 'login', query: { redirect } })
+        })
     },
     // 7.登录成功后跳转页面
     handleLoginSuccess() {
@@ -358,11 +343,11 @@ export default {
       this.$router.replace({ path: redirect })
     },
     // 8.表单校验
-    chechFormRules() {
+    chechFormRules () {
       const { certCode, pwd, eventId, captcha } = this.loginForm
 
       if (!certCode) {
-        this.loginRules.certCode.tips = '请输入正确的手机号码'
+        this.loginRules.certCode.tips = '请输入有效的手机号码'
         return false
       } else {
         this.loginRules.certCode.tips = ''
@@ -376,7 +361,7 @@ export default {
       }
 
       if (!captcha) {
-        this.loginRules.captcha.tips = '请输入验证码'
+        this.loginRules.captcha.tips = '请输入短信验证码'
         return false
       } else {
         this.loginRules.captcha.tips = ''
@@ -395,4 +380,6 @@ export default {
 }
 </script>
 
-<style scoped lang="stylus"></style>
+<style scoped lang="stylus">
+
+</style>

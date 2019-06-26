@@ -6,12 +6,17 @@
 
 <script type="text/ecmascript-6">
 export default {
-  data() {
-    return {}
+  data () {
+    return {
+    }
   },
-  components: {},
-  created() {}
+  components: {
+  },
+  created() {
+  }
 }
 </script>
 
-<style scoped lang="stylus"></style>
+<style scoped lang="stylus">
+
+</style>

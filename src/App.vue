@@ -1,23 +1,33 @@
 <template>
-  <div id="app" class="app">
-    <router-view />
+  <div id="app">
+    <router-view/>
+    <template v-if="isLoading">
+      <loading />
+    </template>
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
+import { mapState } from 'vuex'
+
 export default {
   metaInfo() {
     return {
-      title: '赠股活动',
-      titleTemplate: '%s'
+      title: this.$route.meta.title,
+      titleTemplate: '%s - 玖富犇犇'
     }
+  },
+  computed: {
+    ...mapState({
+      isLoading: state => state.viewLoad.isLoading
+    })
   }
 }
 </script>
 
 <style lang="stylus">
-@import '~common/stylus/variable'
-@import '~common/stylus/mixin'
+@import '~assets/stylus/variable'
+@import '~assets/stylus/mixin'
 #app
   width 100%
   height 100%

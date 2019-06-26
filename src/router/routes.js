@@ -1,58 +1,29 @@
-import Accounts from '@/views/accounts/index'
+// 登陆注册用户模块
+import userRouter from './modules/user'
 
 // 路由懒加载
-// const _import = filename => () => import(`@/views/${filename}/${filename}.vue`)
 const _import = file => () => import('@/views/' + file + '/index.vue')
 
 // 路由配置表
+/**
+ * 路由参数meta详解
+ * title          页面标题
+ * whiteAuth      是否白名单（即不需登录）
+ *
+ */
 const routes = [
+  // 首页
   {
     path: '/',
     name: 'home',
     component: _import('home'),
     meta: { title: '赠股活动' }
   },
-  {
-    path: '/accounts',
-    name: 'accounts',
-    component: Accounts,
-    redirect: '/accounts/login',
-    children: [
-      {
-        name: 'login',
-        path: 'login',
-        component: _import('accounts/login'),
-        meta: { title: '登录' }
-      },
-      {
-        name: 'login-other',
-        path: 'login-other',
-        component: _import('accounts/login-other'),
-        meta: { title: '登录 - 其他方式' }
-      },
-      {
-        name: 'register',
-        path: 'register',
-        component: _import('accounts/register'),
-        meta: { title: '注册' }
-      },
-      {
-        path: 'phone-bind',
-        name: 'phone-bind',
-        component: _import('accounts/phone-bind'),
-        meta: { title: '手机号绑定' }
-      },
-      {
-        name: 'password-reset',
-        path: 'password-reset',
-        component: _import('accounts/password-reset'),
-        meta: { title: '忘记密码' }
-      }
-    ]
-  },
+  // 用户登录注册模块
+  ...userRouter,
   {
     path: '*',
-    redirect: '/404'
+    redirect: '/'
   }
 ]
 

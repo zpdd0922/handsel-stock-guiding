@@ -1,6 +1,6 @@
-@import '~common/stylus/common/white-theme'
-@import '~common/stylus/common/black-theme'
-@import '~common/stylus/mixin'
+@import '~assets/stylus/base/white-theme'
+@import '~assets/stylus/base/black-theme'
+@import '~assets/stylus/mixin'
 
 .bg-wrap
   background-color $white-theme-eff0f0
@@ -62,7 +62,7 @@
     width 610px
     height 207px
     padding-top 10px
-    bg-image('home/rule-bg')
+    bg-image('rule-bg',ture)
     background-size 100%
     .title
       height:80px;
@@ -131,7 +131,7 @@
     bottom -150px
     width:54px;
     height:54px;
-    bg-image('home/close')
+    bg-image('close',ture)
     background-size 100%
   
   
@@ -142,7 +142,7 @@
   position relative
   width 610px
   // height 820px
-  padding: 0 0 70px;
+  padding: 0 0 70px 0;
   border-bottom-right-radius: 20px; 
   border-bottom-left-radius: 20px;
   background-color #fff
@@ -150,7 +150,7 @@
     width 610px
     height 207px
     padding-top 10px
-    bg-image('home/rule-bg')
+    bg-image('rule-bg',ture)
     background-size 100%
     .title
       height:80px;
@@ -239,14 +239,14 @@
     bottom -150px
     width:54px;
     height:54px;
-    bg-image('home/close')
+    bg-image('close',ture)
     background-size 100%
 
 .modelBox3
   position relative
   width 610px
   // height 860px
-  padding: 0 0 70px;
+  padding: 0 0 70px 0;
   border-bottom-right-radius: 20px; 
   border-bottom-left-radius: 20px;
   background-color #fff
@@ -254,7 +254,7 @@
     width 610px
     height 207px
     padding-top 10px
-    bg-image('home/rule-bg')
+    bg-image('rule-bg',ture)
     background-size 100%
     .title
       height:80px;
@@ -268,7 +268,7 @@
   .content 
     // height 530px
     width 100%
-    padding: 34px 90px 0;
+    padding: 34px 0;
     .getStock
       height: 28px
       font-size: 28px  
@@ -295,7 +295,7 @@
       font-weight:400;
       color:rgba(153,153,153,1);
       line-height:24px;
-      padding-left 14px
+      padding-left 90px
       margin-bottom 4px
       text-align left
     table
@@ -355,7 +355,7 @@
     bottom -150px
     width:54px;
     height:54px;
-    bg-image('home/close')
+    bg-image('close',ture)
     background-size 100%
 
 .modelBox4
@@ -369,7 +369,7 @@
     width 610px
     height 220px
     padding-top 10px
-    bg-image('home/rule-bg')
+    bg-image('rule-bg',ture)
     background-size 100%
     .title
       height:80px;
@@ -454,7 +454,7 @@
     width 610px
     height 220px
     padding-top 10px
-    bg-image('home/rule-bg')
+    bg-image('rule-bg',ture)
     background-size 100%
     .title
       height:80px;
@@ -468,7 +468,7 @@
   .content 
     // height 470px
     width 100%
-    padding: 34px 90px 0;
+    padding: 34px 0;
     .getStock
       height: 28px
       font-size: 28px  
@@ -495,7 +495,7 @@
       font-weight:400;
       color:rgba(153,153,153,1);
       line-height:24px;
-      padding-left 14px
+      padding-left 90px
       margin-bottom 4px
       text-align left
     table
@@ -562,5 +562,5 @@
     margin 0 auto
     width 246px 
     height 168px
-    bg-image('home/stock-award')
+    bg-image('stock-award',ture)
     background-size 100%

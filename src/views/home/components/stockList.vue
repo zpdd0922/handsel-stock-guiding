@@ -133,22 +133,22 @@ export default {
   },
   methods: {
     handleClick(item) {
-      this.$emit('getReward',item);
+      this.$emit('getReward', item)
     },
     handleClickQuestion(item) {
-      this.$emit('getRule',item);
+      this.$emit('getRule', item)
     },
     handleClickShare(item) {
-      this.$emit('goShare',item);
+      this.$emit('goShare', item)
     }
   }
 }
 </script>
 
 <style scoped lang="stylus">
-@import '~common/stylus/mixin';
-@import '~common/stylus/common/white-theme';
-@import '~common/stylus/common/black-theme';
+@import '~assets/stylus/base/white-theme'
+@import '~assets/stylus/base/black-theme'
+@import '~assets/stylus/mixin'
 
 .stocklist
   background-color $white-theme-fff
@@ -166,7 +166,7 @@ export default {
       font-weight:400;
       color:$white-theme-999;
       line-height:60px;
-      padding: 0 20px 0 0
+      padding: 0 20px 0 20px
       text-align right
       border-name(1px, $white-theme-e5e5e5, solid, left)
       // border-1px('left', $white-theme-e5e5e5)
@@ -209,7 +209,7 @@ export default {
       padding: 0 30px 0 20px
     }
     .stkName{
-      font-size 30px
+      font-size 28px
       margin-top 20px
       margin-bottom 13px
     }
@@ -217,7 +217,7 @@ export default {
       display inline-block
       width 34px
       height 23px
-      bg-image('home/HK')
+      bg-image('HK')
       margin-right 10px
       background-repeat no-repeat
       background-size 100%
@@ -254,7 +254,7 @@ export default {
       color $white-theme-333
       width 21px
       height 21px
-      bg-image('home/question-white')
+      bg-image('question-white')
       display: inline-block
       background-size 100%
       margin-left 6px
@@ -333,7 +333,7 @@ export default {
       color $white-theme-333
       width 21px
       height 21px
-      bg-image('home/question-white')
+      bg-image('question-white')
       display: inline-block
       background-size 100%
       margin-left 6px
@@ -341,9 +341,6 @@ export default {
       margin-bottom 4px
     }
   }
-
-
-
 
 .stocklist-black
   background-color $black-theme-242426
@@ -382,7 +379,8 @@ export default {
   }
 
   .lineBox {
-    border-1px('bottom', $white-theme-2e2e33)
+    // border-1px('bottom', $white-theme-2e2e33)
+    border-name(1px, $white-theme-2e2e33, solid, bottom)
     .leftPart {
       .title {
         color: $black-theme-999;
@@ -396,7 +394,7 @@ export default {
     }
     .question {
       color $black-theme-999
-      bg-image('home/question-black')
+      bg-image('question-black')
     }
   }
 </style>

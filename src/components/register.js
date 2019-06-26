@@ -11,10 +11,16 @@ const requireComponent = require.context('./', true, /\.vue$/)
 
 requireComponent.keys().forEach(fileName => {
   const componentConfig = requireComponent(fileName)
+
   // 获取组件名，这里我们去掉头和尾，利用正则匹配
   // 示例： 文件 ./Skeleton/index.vue --> Skeleton
   const tempName = fileName.match(/\/(\w+)\//i)[1]
+
   const componentName = capitalizeFirstLetter(tempName)
-  // Vue组件全局注册方法
+
+  // Vue组件全局注册方法 --> 异步加载组件 --> 使用时才解析
+  // 方法一：`require`
   Vue.component(componentName, componentConfig.default || componentConfig)
+  // 方法二：`import`
+  // Vue.component(componentName, () => import(`${fileName}`))
 })

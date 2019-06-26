@@ -58,9 +58,9 @@ export default {
 </script>
 
 <style scoped lang="stylus">
-@import '~common/stylus/mixin'
-@import '~common/stylus/common/white-theme'
-@import '~common/stylus/common/black-theme'
+@import '~assets/stylus/base/white-theme'
+@import '~assets/stylus/base/black-theme'
+@import '~assets/stylus/mixin'
 
 .wrap
   .table

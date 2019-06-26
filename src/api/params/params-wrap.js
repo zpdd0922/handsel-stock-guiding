@@ -1,4 +1,4 @@
-import auth from '@/utils/auth'
+import auth from './auth'
 
 // api接口公用参数
 const WRAP = (data = {}) => ({
@@ -21,13 +21,15 @@ const COMMON = (data = {}) => ({
   }
 })
 
-// 查询开户状态
-const CHECK = () => ({
-  requestSrc: auth.getDevice(),
-  sessionId: auth.getAuthToken()
+// 获取开户相关选项数据字典@params str
+// 'WEB_OCCUPATION_TYPE' 所属行业
+const OPTIONS = (str) => ({
+  params: {
+    mark: str
+  }
 })
 
-// 更新/绑定 手机号
+// 更新/绑定
 const PHONE = (data = {}) => ({
   requestSrc: auth.getDevice(),
   sessionId: auth.getAuthToken(),
@@ -36,7 +38,7 @@ const PHONE = (data = {}) => ({
 
 export default {
   WRAP,
+  OPTIONS,
   COMMON,
-  CHECK,
   PHONE
 }

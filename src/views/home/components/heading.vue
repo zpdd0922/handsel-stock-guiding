@@ -58,7 +58,7 @@ export default {
   },
   computed: {
     renderStatus() {
-      const { openStatus, openStatusDesc, openType, } = this.list
+      const { openStatus, openStatusDesc, openType } = this.list
       let tpl = ''
       switch (openStatus) {
       // 开户预批通过
@@ -133,9 +133,9 @@ export default {
 </script>
 
 <style scoped lang="stylus">
-@import '~common/stylus/mixin';
-@import '~common/stylus/common/white-theme';
-@import '~common/stylus/common/black-theme';
+@import '~assets/stylus/base/white-theme'
+@import '~assets/stylus/base/black-theme'
+@import '~assets/stylus/mixin'
 
 .wrap
   display flex
@@ -150,7 +150,7 @@ export default {
     .logo
       width 80px
       height 80px
-      bg-image('home/logo')
+      bg-image('logo')
       background-repeat no-repeat
       background-size 100%
     .title-wrap

@@ -6,23 +6,23 @@
     <div class="login-tab">
       <template v-if="showLoginTab">
         <span :class="loginClassObj" @click="handleGoto('login')">登录</span>
-        <span :class="registerClassObj" @click="handleGoto('register')"
-          >注册</span
-        >
+        <span :class="registerClassObj" @click="handleGoto('register')">注册</span>
       </template>
       <template v-else>
-        <span>{{ $route.meta.title }}</span>
+        <span>{{$route.meta.title}}</span>
       </template>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+
 export default {
-  data() {
+  data () {
     return {}
   },
-  created() {},
+  created() {
+  },
   methods: {
     handleGoto(name) {
       const query = this.$route.query
@@ -33,35 +33,31 @@ export default {
     pathName() {
       return this.$route.name
     },
+    showLoginTab() {
+      return this.$route.meta.tabStatus
+    },
     loginClassObj() {
       // 需要保持登录页相关的tab项高亮
       const isActive = this.pathName.indexOf('login') > -1
       return {
         'tab-item': true,
-        active: isActive
+        'active': isActive
       }
     },
     registerClassObj() {
       const isActive = this.pathName === 'register'
       return {
         'tab-item': true,
-        active: isActive
+        'active': isActive
       }
-    },
-    showLoginTab() {
-      const isActive =
-        this.pathName.indexOf('login') > -1 ||
-        this.pathName.indexOf('register') > -1
-      return isActive
     }
-  },
-  components: {}
+  }
 }
 </script>
 
 <style scoped lang="stylus">
-@import '~common/stylus/variable'
-@import '~common/stylus/mixin'
+@import '~assets/stylus/variable'
+@import '~assets/stylus/mixin'
 
 .login-logo
   width 100%
@@ -72,6 +68,7 @@ export default {
   .logo-bg
     width 468px
     height 112px
-    background url('../../../common/image/common/logo.png') center center no-repeat
+    background url('../images/logo.png') center center no-repeat
     background-size 341px 76px
+
 </style>

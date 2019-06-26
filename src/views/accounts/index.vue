@@ -15,11 +15,14 @@ export default {
       title: this.$route.meta.title
     }
   },
-  data() {
-    return {}
+  data () {
+    return {
+    }
   },
-  created() {},
-  mounted() {},
+  created() {
+  },
+  mounted() {
+  },
   components: {
     LoginHead,
     LoginMain,

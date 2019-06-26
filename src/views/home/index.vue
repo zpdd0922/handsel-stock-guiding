@@ -242,7 +242,7 @@ import { formatNum, mul } from '@/utils/number'
 import Heading from './components/heading.vue'
 import Stockvalue from './components/stockvalue.vue'
 import StockList from './components/stockList.vue'
-import recordApi from '@/api/api-record'
+import recordApi from '@/api/modules/api-record'
 import { giftStockShare } from '@/native-app/native-api'
 
 export default {
@@ -266,16 +266,16 @@ export default {
       changeAll: 0, // 涨跌额
       changePctAll: 0, // 涨跌幅
       openAccountRuleList: {}, // 开户入金奖励
-      depositRwList:[], // 首次入金奖励列表
+      depositRwList: [], // 首次入金奖励列表
       depositRwStkName: '', // 首次入金奖励股票
-      transferRwList:[], // 首次转仓奖励列表
-      transferRwStkName:'', // 首次转仓奖励股票
+      transferRwList: [], // 首次转仓奖励列表
+      transferRwStkName: '', // 首次转仓奖励股票
       awardObj: {}, // 奖励
       visibleYHS: false, // dialog显示隐藏印花税
       argeementStatus: false,
       headingStockOa: {}, // 开户待领取股票对象
       headingStockDe: {}, // 入金待领取股票对象
-      depositStatus: 0, // 是否入金
+      depositStatus: 0 // 是否入金
     }
   },
   computed: {
@@ -287,7 +287,7 @@ export default {
     },
     isHead() {
       return this.urlObj['isHead']
-    },
+    }
   },
   created() {
     // 查询开户状态
@@ -301,7 +301,7 @@ export default {
       recordApi.getOpenStatus({ openType: 1 }).then(res => {
         console.log('查询开户状态res', res)
         this.openStatusObj = res
-        this.depositStatus = res.depositStatus  // 是否入金
+        this.depositStatus = res.depositStatus // 是否入金
       })
     },
     // 查询待领取股票
@@ -312,23 +312,23 @@ export default {
         this.stockList = res.stockList
         this.mktValueAll = formatNum(res.mktValueAll)
         this.changeAll = formatNum(res.changeAll)
-        const changePctAll = mul(res.changePctAll,100)
+        const changePctAll = mul(res.changePctAll, 100)
         this.changePctAll = formatNum(changePctAll)
         // 将数组里的某些字段数字格式化，保留两位小数
         let newStockArr = []
-        for(let index in stockList){
+        for (let index in stockList) {
           const {
             stkName,
             stkCode,
             mktCode,
             minNumber,
             maxNumber,
-            minMktValue:minMktValue,
-            maxMktValue:maxMktValue,
-            price:price,
-            cost:cost,
-            minIncome:minIncome,
-            maxIncome:maxIncome,
+            minMktValue,
+            maxMktValue,
+            price,
+            cost,
+            minIncome,
+            maxIncome,
             busType,
             activeType,
             validityPeriod,
@@ -336,24 +336,24 @@ export default {
             configItemId,
             isExpired,
             ruleList
-           } = stockList[index]
+          } = stockList[index]
           const FTminMktValue = formatNum(minMktValue)
           const FTmaxMktValue = formatNum(maxMktValue)
           const FTprice = formatNum(price)
           const FTminIncome = formatNum(minIncome)
           const FTmaxIncome = formatNum(maxIncome)
-          const stockObj ={
+          const stockObj = {
             stkName,
             stkCode,
             mktCode,
             minNumber,
             maxNumber,
-            minMktValue:FTminMktValue,
-            maxMktValue:FTmaxMktValue,
-            price:FTprice,
+            minMktValue: FTminMktValue,
+            maxMktValue: FTmaxMktValue,
+            price: FTprice,
             cost,
-            minIncome:FTminIncome,
-            maxIncome:FTmaxIncome,
+            minIncome: FTminIncome,
+            maxIncome: FTmaxIncome,
             busType,
             activeType,
             validityPeriod,
@@ -364,24 +364,24 @@ export default {
           }
           newStockArr.push(stockObj)
           // 获取对应的领取奖励规则
-          if(stockList[index].activeType === 1) {
+          if (stockList[index].activeType === 1) {
             this.openAccountRuleList = stockList[index].ruleList[0]
             const RwObj = {
-              stkName:stockList[index].stkName,
-              minNumber:stockList[index].minNumber
+              stkName: stockList[index].stkName,
+              minNumber: stockList[index].minNumber
             }
             this.headingStockOa = RwObj
           }
-          if(stockList[index].activeType === 2) {
+          if (stockList[index].activeType === 2) {
             this.depositRwList = stockList[index].ruleList
             this.depositRwStkName = stockList[index].ruleList[0].stkName || ''
             const RwObj = {
-              stkName:stockList[index].stkName,
-              minNumber:stockList[index].minNumber
+              stkName: stockList[index].stkName,
+              minNumber: stockList[index].minNumber
             }
             this.headingStockDe = RwObj
           }
-          if(stockList[index].activeType === 3) {
+          if (stockList[index].activeType === 3) {
             this.transferRwList = stockList[index].ruleList
             this.transferRwStkName = stockList[index].ruleList[0].stkName || ''
           }
@@ -406,7 +406,6 @@ export default {
       const isNewOpen = this.urlObj['isnew']
       handleAppOpen(window.GO_INTO_STOCK, isNewOpen)
     },
-
 
     // 弹出【立即开户】模态框
     showOpenAccountPopup() {
@@ -468,7 +467,7 @@ export default {
     },
     // 赠股确认领取
     getStockSure() {
-      const  { rewardId, configItemId } = this.awardObj
+      const { rewardId, configItemId } = this.awardObj
       const params = { rewardId, configItemId }
 
       // 领取奖励
@@ -486,21 +485,21 @@ export default {
     getReward(item) {
       const activeType = item.activeType
       const busType = item.busType
-      if(busType === 0 || busType === 1 || busType === 2) {
+      if (busType === 0 || busType === 1 || busType === 2) {
         // 开户奖励规则弹框
-        if(activeType === 1) {
+        if (activeType === 1) {
           this.showOpenAccountPopup()
         }
         // 入金奖励规则弹框
-        if(activeType === 2) {
+        if (activeType === 2) {
           this.showDepositPopup()
         }
         // 转仓奖励规则弹框
-        if(activeType === 3) {
+        if (activeType === 3) {
           this.showTransferPopup()
         }
       }
-      if(busType === 3) {
+      if (busType === 3) {
         this.awardObj = item
         this.showStockBox()
       }
@@ -509,11 +508,11 @@ export default {
     getRule(item) {
       const type = item.activeType
       // 入金奖励
-      if(type === 2) {
+      if (type === 2) {
         this.showDepositRulePopup()
       }
       // 转仓奖励
-      if(type === 3) {
+      if (type === 3) {
         this.showTransferRulePopup()
       }
     },
@@ -524,16 +523,16 @@ export default {
         minNumber,
         minIncome
       } = item
-      const params ={
+      const params = {
         stkName,
-        stkQuantity:minNumber,
-        mktValue:minIncome,
+        stkQuantity: minNumber,
+        mktValue: minIncome,
         shareUrl: window.SHARE_ADDRESS
       }
-      console.log('params:'+JSON.stringify(params))
+      console.log('params:' + JSON.stringify(params))
       giftStockShare(params)
     }
-  },
+  }
 
 }
 </script>

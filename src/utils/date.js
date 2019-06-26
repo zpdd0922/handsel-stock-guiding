@@ -47,10 +47,10 @@ export const timestampToTime = (timestamp, needTime = false, format = 1) => {
   let s = padTime(date.getSeconds())
 
   switch (format) {
-    case 1:
-      return needTime ? `${Y}-${M}-${D} ${h}:${m}:${s}` : `${Y}-${M}-${D}`
-    case 2:
-      return needTime ? `${D}/${M}/${Y} ${h}:${m}:${s}` : `${D}/${M}/${Y}`
+  case 1:
+    return needTime ? `${Y}-${M}-${D} ${h}:${m}:${s}` : `${Y}-${M}-${D}`
+  case 2:
+    return needTime ? `${D}/${M}/${Y} ${h}:${m}:${s}` : `${D}/${M}/${Y}`
   }
 }
 
@@ -138,7 +138,7 @@ export const getBetweenDateScope = (start, end) => {
   let arr = []
 
   if (start > end) throw Error('1参日期晚于2参日期')
-  for (let i = start; i <= end; ) {
+  for (let i = start; i <= end;) {
     arr.push(timestampToTime(i))
     i += oneDay
   }

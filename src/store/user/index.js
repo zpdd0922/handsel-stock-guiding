@@ -1,11 +1,9 @@
-import userApi from '@/api/api-user'
+import userApi from '@/api/modules/api-user'
 import paramsData from '@/api/params/params-wrap'
-import { KEY_USER_INFO, KEY_SESSION_INFO } from '@/api/config/index'
+import { KEY_USER_INFO, KEY_SESSION_INFO } from '@/api/config'
 
 import storage from '@/utils/storage'
 import * as types from './mutation-user-types'
-
-/* eslint-disable */
 
 // 初始化数据 --> mapStates
 const state = {
@@ -43,9 +41,8 @@ const actions = {
    * 获取用户所在IP
    */
   getIpAddr({ commit, state }) {
-    return new Promise(resolve => {
-      userApi
-        .getIpAddr()
+    return new Promise((resolve, reject) => {
+      userApi.getIpAddr()
         .then(res => {
           resolve(res)
         })
@@ -59,8 +56,7 @@ const actions = {
    */
   checkLogin({ commit, state }, params) {
     return new Promise((resolve, reject) => {
-      userApi
-        .checkLogin(params)
+      userApi.checkLogin(params)
         .then(res => {
           resolve(res)
         })
@@ -74,8 +70,7 @@ const actions = {
    */
   login({ commit, state }, params) {
     return new Promise((resolve, reject) => {
-      userApi
-        .login(params)
+      userApi.login(params)
         .then(res => {
           commit(types.SET_USER_INFO, { result: res })
           resolve(res)
@@ -100,8 +95,7 @@ const actions = {
    */
   logout({ commit, state }, params) {
     return new Promise((resolve, reject) => {
-      userApi
-        .logout(params)
+      userApi.logout(params)
         .then(res => {
           // 清除本地缓存
           storage.clear()
@@ -128,13 +122,12 @@ const actions = {
    */
   sendCode({ commit, state }, params) {
     return new Promise((resolve, reject) => {
-      userApi
-        .sendCode(params)
+      userApi.sendCode(params)
         .then(res => {
           resolve(res)
         })
         .catch(err => {
-          console.log(err)
+          reject(err)
         })
     })
   },
@@ -143,8 +136,7 @@ const actions = {
    */
   needCaptcha({ commit, state }, params) {
     return new Promise((resolve, reject) => {
-      userApi
-        .needCaptcha(params)
+      userApi.needCaptcha(params)
         .then(res => {
           commit(types.SHOW_CAPTACH, { status: res })
           resolve(res)
@@ -159,8 +151,7 @@ const actions = {
    */
   register({ commit, state }, params) {
     return new Promise((resolve, reject) => {
-      userApi
-        .register(params)
+      userApi.register(params)
         .then(res => {
           resolve(res)
         })
@@ -174,8 +165,7 @@ const actions = {
    */
   checkMobile({ commit, state }, params) {
     return new Promise((resolve, reject) => {
-      userApi
-        .checkMobile(params)
+      userApi.checkMobile(params)
         .then(res => {
           resolve(res)
         })
@@ -189,8 +179,7 @@ const actions = {
    */
   checkCode({ commit, state }, params) {
     return new Promise((resolve, reject) => {
-      userApi
-        .checkCode(params)
+      userApi.checkCode(params)
         .then(res => {
           resolve(res)
         })
@@ -204,8 +193,7 @@ const actions = {
    */
   updateMobile({ commit, state }, params) {
     return new Promise((resolve, reject) => {
-      userApi
-        .updateMobile(paramsData.PHONE(params))
+      userApi.updateMobile(paramsData.PHONE(params))
         .then(res => {
           resolve(res)
         })
@@ -219,8 +207,7 @@ const actions = {
    */
   updatePassword({ commit, state }, params) {
     return new Promise((resolve, reject) => {
-      userApi
-        .updatePassword(params)
+      userApi.updatePassword(params)
         .then(res => {
           resolve(res)
         })
@@ -234,8 +221,7 @@ const actions = {
    */
   updateTradePassword({ commit, state }, params) {
     return new Promise((resolve, reject) => {
-      userApi
-        .updateTradePassword(params)
+      userApi.updateTradePassword(params)
         .then(res => {
           resolve(res)
         })
@@ -249,8 +235,7 @@ const actions = {
    */
   getUserType({ commit, state }, params) {
     return new Promise((resolve, reject) => {
-      userApi
-        .getUserType(params)
+      userApi.getUserType(params)
         .then(res => {
           resolve(res)
         })
@@ -264,8 +249,7 @@ const actions = {
    */
   resetPassword({ commit, state }, params) {
     return new Promise((resolve, reject) => {
-      userApi
-        .resetPassword(params)
+      userApi.resetPassword(params)
         .then(res => {
           resolve(res)
         })

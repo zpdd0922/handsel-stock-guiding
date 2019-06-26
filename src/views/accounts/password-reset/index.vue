@@ -1,9 +1,5 @@
 <template>
-  <register-form
-    :register-type="type"
-    :placeholder="placeholder"
-    :submit-text="text"
-  ></register-form>
+  <register-form :register-type="type" :placeholder="placeholder" :submit-text="text"></register-form>
 </template>
 
 <script>

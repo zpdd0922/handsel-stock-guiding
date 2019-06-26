@@ -1,9 +1,9 @@
-import UserAge from '../utils/uaparser'
+import UserAge from '../utils/ua-parser'
 import { getURLParameters } from '../utils/url'
 
 window.JFClient_H5CallBack_O = {}
-/* eslint-disable */
-window.JFClient_H5_CallBack = res => {
+
+window.JFClient_H5_CallBack = (res) => {
   if (res === null) {
     console.log('callBack null', res)
     return
@@ -15,17 +15,16 @@ window.JFClient_H5_CallBack = res => {
     const [funcName, msg] = res.msg.split(':')
     console.log('JFClient_H5_CallBack：', funcName, res)
     if (msg.toLowerCase() === 'ok') {
-      typeof window.JFClient_H5CallBack_O[`${funcName}_Success`] ===
-        'function' &&
+      typeof window.JFClient_H5CallBack_O[`${funcName}_Success`] === 'function' &&
         window.JFClient_H5CallBack_O[`${funcName}_Success`](res, msg)
     } else {
       typeof window.JFClient_H5CallBack_O[`${funcName}_Fail`] === 'function' &&
         window.JFClient_H5CallBack_O[`${funcName}_Fail`](res, msg)
     }
     return funcName
-  }).then(funcName => {
-    typeof window.JFClient_H5CallBack_O[`${funcName}_Complete`] ===
-      'function' && window.JFClient_H5CallBack_O[`${funcName}_Complete`](res)
+  }).then((funcName) => {
+    typeof window.JFClient_H5CallBack_O[`${funcName}_Complete`] === 'function' &&
+      window.JFClient_H5CallBack_O[`${funcName}_Complete`](res)
   })
 }
 
@@ -64,24 +63,17 @@ class JsBridge {
   }
 
   static toAndroid(funcName, params) {
-    if (
-      typeof window.JFNewClient === 'object' &&
-      typeof window.JFNewClient[funcName] === 'function'
-    ) {
+    if (typeof window.JFNewClient === 'object' && typeof window.JFNewClient[funcName] === 'function') {
       window.JFNewClient[funcName](JSON.stringify(params))
     }
   }
 
   static toIOS(funcName, params) {
     JsBridge.setupWebViewJavascriptBridge(bridge => {
-      bridge.callHandler(
-        'JFNewClient',
-        { function: funcName, data: params },
-        res => {
-          console.log(`[ callHandler ${funcName} success ]`, res)
-          window.JFClient_H5_CallBack(res)
-        }
-      )
+      bridge.callHandler('JFNewClient', { function: funcName, data: params }, (res) => {
+        console.log(`[ callHandler ${funcName} success ]`, res)
+        window.JFClient_H5_CallBack(res)
+      })
       bridge.registerHandler('JFNewClient_Back', (data, responseCallback) => {
         console.log(`back ios ${funcName}`)
         window.JFClient_H5_CallBack(data)
@@ -91,14 +83,10 @@ class JsBridge {
 
   static toIOSNew(funcName, params) {
     JsBridge.setupWebViewJavascriptBridge(bridge => {
-      bridge.callHandler(
-        funcName,
-        { function: funcName, data: params },
-        res => {
-          console.log(`IOSNew callHandler ${funcName} success`, res)
-          window.JFClient_H5_CallBack(res)
-        }
-      )
+      bridge.callHandler(funcName, { function: funcName, data: params }, (res) => {
+        console.log(`IOSNew callHandler ${funcName} success`, res)
+        window.JFClient_H5_CallBack(res)
+      })
       bridge.registerHandler(funcName, (data, responseCallback) => {
         console.log(`IOSNew back ios new ${funcName}`)
         window.JFClient_H5_CallBack(data)

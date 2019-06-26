@@ -1,24 +1,29 @@
+// es6 --> es5
+import '@babel/polyfill'
+
 import Vue from 'vue'
 import App from './App.vue'
-import router from '@/router'
-import store from '@/store'
+import router from './router'
+import store from './store'
 
 import VueMeta from 'vue-meta'
-// import VConsole from 'vconsole'
 import VueLazyLoad from 'vue-lazyload'
-import lodash from 'lodash-es'
 
 import fastclick from 'fastclick'
-// import axios from '@/api/axios'
+import lodash from 'lodash-es'
 
-// import '@/mock'
-import 'swiper/dist/css/swiper.css'
+// 样式配置
+import './assets/stylus/index.styl'
+import './assets/js/rem'
 
-import './common/js/rem'
-import './common/stylus/index.styl'
-
+// 公用组件注册
 import './components/register'
-import '@/router/permission'
+
+// 引入路由控制
+import './router/permission'
+
+// 本地模拟接口
+// import '@/mock'
 
 // 引入 Style 加载基础样式
 import {
@@ -54,17 +59,17 @@ Vue.use(VueMeta)
 
 // 图片懒加载
 Vue.use(VueLazyLoad, {
-  loading: require('./common/image/default.png')
+  loading: require('./assets/images/default.png')
 })
-
-Vue.config.productionTip = false
-
-// Vue.prototype.$http = axios
-Vue.prototype.$lodash = lodash
 
 fastclick.attach(document.body)
 
-// 测试环境 开启vConsole
+Vue.prototype.$_ = lodash
+
+Vue.config.productionTip = false
+
+// 非生产环境开启 vConsole
+// 生产执行npm run uat
 if (process.env.VUE_APP_CONSOLE === 'show') {
   const VConsole = require('vconsole')
   const vConsole = new VConsole()

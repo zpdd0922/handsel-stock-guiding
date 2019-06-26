@@ -1,5 +1,5 @@
 import JsToNative from './message-app'
-import UserAge from '../utils/uaparser'
+import UserAge from '../utils/ua-parser'
 
 // 获取用户全量信息
 export function getUserInfoAPP(res) {
@@ -93,6 +93,16 @@ export function shareAppAction(res) {
 // 获取手机信息
 export function getMobileInfo(res) {
   JsToNative('getMobileInfo', res)
+}
+
+// 设置PIN码
+export function initSZCA(res) {
+  JsToNative('initSZCA', res, true)
+}
+
+// 签署CA协议
+export function setCADoc(res) {
+  JsToNative('signingCADoc', res, true)
 }
 
 // 唤醒分享二维码接口

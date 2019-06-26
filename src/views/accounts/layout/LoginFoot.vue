@@ -5,10 +5,10 @@
 </template>
 
 <script type="text/ecmascript-6">
-import { landscape } from '@/utils/is'
+import { isLandscape } from '@/utils/is'
 
 export default {
-  data() {
+  data () {
     return {
       isLandscape: false
     }
@@ -28,12 +28,12 @@ export default {
       // 事件触发
       window.addEventListener('orientationchange', this.handleOrientation)
       // 退出后摧毁实例
-      this.$once('hook:beforeDestroy', function() {
+      this.$once('hook:beforeDestroy', function () {
         window.removeEventListener('orientationchange', this.handleOrientation)
       })
     },
     handleOrientation() {
-      this.isLandscape = landscape()
+      this.isLandscape = isLandscape()
     }
   },
   created() {
@@ -43,17 +43,17 @@ export default {
 </script>
 
 <style scoped lang="stylus">
-@import '~common/stylus/variable'
-@import '~common/stylus/mixin'
+@import '~assets/stylus/variable'
+@import '~assets/stylus/mixin'
 
 .login-foot
   width 100%
   font-size 28px
   line-height 1em
-  color $color-foot
+  color #dcdcdc
   text-align center
   margin 38px 0
-  position absolute
+  position fixed
   left 0
   bottom 0
   z-index 1

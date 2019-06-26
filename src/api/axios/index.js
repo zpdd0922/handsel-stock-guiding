@@ -2,13 +2,13 @@ import axios from 'axios'
 import store from '@/store'
 import router from '@/router'
 import { toast } from '@/utils/tips'
-import { ERR_OK, HOST } from '../config/index'
+import { ERR_OK, HOST } from '../config'
 
 // 定义请求不需Loading模态框的url
-const notNeedLoading = ['open_api/riskstart', 'open_api/riskend']
+const notNeedLoading = []
 
 // 定义始终允许通过的后台请求
-const notNeedAlert = ['open_api/ocr']
+const notNeedAlert = []
 
 const Axios = axios.create({
   baseURL: HOST, // 前缀
@@ -33,7 +33,7 @@ Axios.interceptors.request.use(
       if (config.params) {
         config.params['_'] = +new Date()
       } else {
-        config.params = { _: +new Date() }
+        config.params = { '_': +new Date() }
       }
     }
     return config
@@ -54,7 +54,7 @@ Axios.interceptors.response.use(
     const data = response.data
 
     // 接口请求数据格式固定
-    const { code, message = '请求异常', result = {} } = data
+    const { code, message = '网络繁忙，请稍后再试', result = {} } = data
 
     // 处理请求完成code
     if (code !== ERR_OK) {
