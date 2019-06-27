@@ -302,6 +302,7 @@ export default {
     this.getOpenStatus()
     // 查询待领取股票
     this.getWaitReceiveStock()
+    this.getDepositStatus()
   },
   methods: {
     // 查询开户状态
@@ -309,7 +310,7 @@ export default {
       recordApi.getOpenStatus({ openType: 1 }).then(res => {
         console.log('查询开户状态res', res)
         this.openStatusObj = res
-        this.depositStatus = res.depositStatus // 是否入金
+        // this.depositStatus = res.depositStatus // 是否入金
       })
     },
     // 查询待领取股票
@@ -524,25 +525,6 @@ export default {
         this.showTransferRulePopup()
       }
     },
-    // checkAppVersion() {
-    //   const that = this
-    //   let versionIOS = -1
-    //   let versionAndroid = -1
-    //   if (UserAge.isApp()) {
-    //     getMobileInfo({
-    //       success: function (res) {
-    //         const result = JSON.parse(res.data)
-    //         versionIOS = compareVersion(result.appVersion, window.IOS_VERSION)
-    //         versionAndroid = compareVersion(result.appVersion, window.ANDROID_VERSION)
-    //         if ((UserAge.isIOS() && versionIOS >= 0) || (UserAge.isAndroid() && versionAndroid >= 0)) {
-
-    //         } else {
-    //           alert({ title: '提示', content: '请下载最新版APP' })
-    //         }
-    //       }
-    //     })
-    //   }
-    // },
     // 点击分享
     goShare(item) {
       const {
@@ -578,6 +560,11 @@ export default {
       }
       // console.log('params:' + JSON.stringify(params))
     },
+    getDepositStatus() {
+      recordApi.findCrmUserStatus().then(res => {
+        this.depositStatus = res.depositStatus // 是否入金
+      })
+    }
   }
 
 }
