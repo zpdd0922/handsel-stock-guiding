@@ -3,7 +3,7 @@
     <cube-scroll :class="['bg-wrap', `bg-wrap-${skin}`]">
       <div :class="['container', `container-${skin}`]">
         <!-- 指引组件 -->
-        <template v-if="isHead">
+        <template>
           <!-- 待领取股票市值 -->
           <Stockvalue
             :skin="skin"
@@ -14,6 +14,7 @@
 
           <!-- 指导框 -->
           <Heading
+            v-if="depositStatus===0" 
             :list="openStatusObj"
             :skin="skin"
             :urlObj="urlObj"
@@ -238,12 +239,15 @@
 <script type="text/ecmascript-6">
 import handleAppOpen from '@/utils/handleAppOpen'
 import { getURLParameters } from '@/utils/url'
+import UserAge from '@/utils/uaparser'
+import { compareVersion } from '@/utils/compareVersion'
 import { formatNum, mul } from '@/utils/number'
 import Heading from './components/heading.vue'
 import Stockvalue from './components/stockvalue.vue'
 import StockList from './components/stockList.vue'
 import recordApi from '@/api/modules/api-record'
-import { giftStockShare } from '@/native-app/native-api'
+import { giftStockShare, getMobileInfo } from '@/native-app/native-api'
+import { alert } from '@/utils/tips'
 
 export default {
   components: {
@@ -287,6 +291,10 @@ export default {
     },
     isHead() {
       return this.urlObj['isHead']
+    },
+    // 判断当前路由环境
+    origin() {
+      return UserAge.isApp() ? 'app' : 'h5'
     }
   },
   created() {
@@ -516,6 +524,25 @@ export default {
         this.showTransferRulePopup()
       }
     },
+    // checkAppVersion() {
+    //   const that = this
+    //   let versionIOS = -1
+    //   let versionAndroid = -1
+    //   if (UserAge.isApp()) {
+    //     getMobileInfo({
+    //       success: function (res) {
+    //         const result = JSON.parse(res.data)
+    //         versionIOS = compareVersion(result.appVersion, window.IOS_VERSION)
+    //         versionAndroid = compareVersion(result.appVersion, window.ANDROID_VERSION)
+    //         if ((UserAge.isIOS() && versionIOS >= 0) || (UserAge.isAndroid() && versionAndroid >= 0)) {
+
+    //         } else {
+    //           alert({ title: '提示', content: '请下载最新版APP' })
+    //         }
+    //       }
+    //     })
+    //   }
+    // },
     // 点击分享
     goShare(item) {
       const {
@@ -529,9 +556,28 @@ export default {
         mktValue: minIncome,
         shareUrl: window.SHARE_ADDRESS
       }
-      console.log('params:' + JSON.stringify(params))
-      giftStockShare(params)
-    }
+      const that = this
+      let versionIOS = -1
+      let versionAndroid = -1
+      if (UserAge.isApp()) {
+        getMobileInfo({
+          success: function (res) {
+            const result = JSON.parse(res.data)
+            versionIOS = compareVersion(result.appVersion, window.IOS_VERSION)
+            versionAndroid = compareVersion(result.appVersion, window.ANDROID_VERSION)
+            if ((UserAge.isIOS() && versionIOS >= 0) || (UserAge.isAndroid() && versionAndroid >= 0)) {
+              // 大于最新版本才可以做分享动作
+              giftStockShare(params)
+
+            } else {
+              // 小于这个版本则做alert提示
+              alert({ title: '提示', content: '请下载最新版APP' })
+            }
+          }
+        })
+      }
+      // console.log('params:' + JSON.stringify(params))
+    },
   }
 
 }
