@@ -14,7 +14,7 @@ export default {
   metaInfo() {
     return {
       title: this.$route.meta.title,
-      titleTemplate: '%s - 玖富犇犇'
+      titleTemplate: '%s'
     }
   },
   computed: {

@@ -152,7 +152,7 @@ export default {
 
 .stocklist
   background-color $white-theme-fff
-  padding: 0 0 17px;
+  // padding: 0 0 17px;
   margin-bottom 20px
   .titleHeader{
     height: 60px;
@@ -160,13 +160,14 @@ export default {
     background-color $white-theme-fff
     border-name(1px, $white-theme-e5e5e5, solid, bottom)
     .title {
+      box-sizing border-box
       width 20%
       height:60px;
       font-size:24px;
       font-weight:400;
       color:$white-theme-999;
       line-height:60px;
-      padding: 0 20px 0 20px
+      padding: 0 16px 0 4px
       text-align right
       border-name(1px, $white-theme-e5e5e5, solid, left)
       // border-1px('left', $white-theme-e5e5e5)
@@ -181,16 +182,17 @@ export default {
       width 18%
     }
     .title:last-child {
-      padding: 0 30px 0 20px
+      padding: 0 30px 0 0px
     }
   }
 
   .stockContent {
     display flex
     .stockItem{
+      box-sizing border-box
       width 20%
       height 110px
-      padding: 0 20px 0 20px
+      padding: 0 16px 0 4px
       text-align right
       overflow-x hidden
       border-name(1px, $white-theme-e5e5e5, solid, left)
@@ -261,7 +263,7 @@ export default {
       vertical-align middle
     }
     .profitColor {
-      color: $white-theme-f95a29;
+      color: #EB333B!important;
     }
   }
 

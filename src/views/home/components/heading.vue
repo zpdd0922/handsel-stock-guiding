@@ -42,6 +42,7 @@
 
 <script type="text/ecmascript-6">
 import handleAppOpen from '@/utils/handleAppOpen'
+import recordApi from '@/api/modules/api-record'
 
 export default {
   props: {
@@ -122,8 +123,16 @@ export default {
       handleAppOpen(url, this.urlObj['isnew'])
     },
     DepositHandle() {
-      const url = `${window.GO_DEPOSIT}?skin=${this.skin}`
-      handleAppOpen(url, this.urlObj['isnew'])
+      recordApi.getOpenBankType().then((res)=>{
+        const { bankType = 1 } = res
+        if(bankType){
+          const url = `${window.GO_DEPOSIT_CN}?skin=${this.skin}`
+          handleAppOpen(url, this.urlObj['isnew'])
+        }else {
+          const url = `${window.GO_DEPOSIT_HK}?skin=${this.skin}`
+          handleAppOpen(url, this.urlObj['isnew'])
+        }
+      })
     }
   },
   created() {

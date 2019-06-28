@@ -67,7 +67,7 @@
     </cube-popup>
 
     <!-- 立即入金 -->
-    <cube-popup
+    <!-- <cube-popup
       type="my-popup"
       position="center"
       :mask-closable="false"
@@ -94,20 +94,15 @@
             </tr>
           </table>
         </div>
-        <!-- <div class="footer">
-          <cube-checkbox class="with-click" v-model="agreeChecked">
-            我同意并授权玖富证券团队处理印花税事宜
-          </cube-checkbox>
-        </div> -->
         <div class="clickBtn" @click="jumpDeposit">
           <p>立即入金</p>
         </div>
         <div class="closeBtn" @click="closeDepositPopup"></div>
       </div>
-    </cube-popup>
+    </cube-popup> -->
 
     <!-- 立即转仓 -->
-    <cube-popup
+    <!-- <cube-popup
       type="my-popup"
       position="center"
       :mask-closable="false"
@@ -136,17 +131,12 @@
 
           <p class="bottomTxt">*仅限大陆CA开户用户</p>
         </div>
-        <!-- <div class="footer">
-          <cube-checkbox class="with-click" v-model="agreeChecked">
-            我同意并授权玖富证券团队处理印花税事宜
-          </cube-checkbox>
-        </div> -->
         <div class="clickBtn" @click="jumpTransferStk">
           <p>立即转仓</p>
         </div>
         <div class="closeBtn" @click="closeTransferPopup"></div>
       </div>
-    </cube-popup>
+    </cube-popup> -->
 
     <!-- 入金规则 -->
     <cube-popup
@@ -233,6 +223,76 @@
         </div>
       </cube-dialog>
     </template>
+    <!-- 新版去入金弹框 -->
+    <template>
+      <jf-dialog 
+        :visible="modalBox2"
+        class="depositModule2"
+        @confirm="jumpDeposit"
+        @cancel="closeDepositPopup"
+        >
+        <div class="scroll-rule-list">
+          <cube-scroll ref="scrollRule2">
+            <ul class="list-wrap">
+            <div class="content">
+              <p class="getStock">
+                获取<span class="stkName">【{{ depositRwStkName }}】</span
+                >股票奖励，
+              </p>
+              <p class="tips">入金满相应额度即可领取</p>
+              <table>
+                <tr>
+                  <th>首次入金满</th>
+                  <th>奖励股票</th>
+                </tr>
+                <tr v-for="(item, index) in depositRwList" :key="index">
+                  <td>{{ item.curreny }}{{ item.amount }}</td>
+                  <td>{{ item.stkQuantity }}股{{ item.stkName }}</td>
+                </tr>
+              </table>
+            </div>
+            </ul>
+          </cube-scroll>
+        </div>
+      </jf-dialog>
+    </template>
+
+    <!--新版去转仓弹框  -->
+    <template>
+      <tr-dialog 
+        :visible="modalBox3"
+        class="depositModule3"
+        @confirm="jumpTransferStk"
+        @cancel="closeTransferPopup"
+        >
+        <div class="scroll-rule-list">
+          <cube-scroll ref="scrollRule3">
+            <ul class="list-wrap">
+              <div class="content">
+                <p class="getStock">
+                  获取<span class="stkName">【{{ transferRwStkName }}】</span
+                  >股票奖励，
+                </p>
+                <p class="tips">转仓市值满相应额度即可领取</p>
+                <table>
+                  <tr>
+                    <th>首次转仓满</th>
+                    <th>奖励股票</th>
+                  </tr>
+                  <tr v-for="(item, index) in transferRwList" :key="index">
+                    <td>{{ item.curreny }}{{ item.amount }}</td>
+                    <td>{{ item.stkQuantity }}股{{ item.stkName }}</td>
+                  </tr>
+                </table>
+                <p class="bottomTxt">*仅限大陆CA开户用户</p>
+              </div>
+            </ul>
+          </cube-scroll>
+        </div>
+      </tr-dialog>
+    </template>
+
+
   </div>
 </template>
 
@@ -246,8 +306,9 @@ import Heading from './components/heading.vue'
 import Stockvalue from './components/stockvalue.vue'
 import StockList from './components/stockList.vue'
 import recordApi from '@/api/modules/api-record'
-import { giftStockShare, getMobileInfo } from '@/native-app/native-api'
+import { giftStockShare, getMobileInfo, getUserInfoAPP } from '@/native-app/native-api'
 import { alert } from '@/utils/tips'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -279,10 +340,17 @@ export default {
       argeementStatus: false,
       headingStockOa: {}, // 开户待领取股票对象
       headingStockDe: {}, // 入金待领取股票对象
-      depositStatus: 0 // 是否入金
+      depositStatus: 0, // 是否入金
+      openAccountStatus: 0, // 是否开户
+      modalBox2: false, // 入金规则弹框是否展示
+      modalBox3: false, // 转仓规则弹框是否展示
+      UserCode: 1, //用户犇犇号
     }
   },
   computed: {
+    // ...mapGetters([
+    //   'userInfo'
+    // ]),
     urlObj() {
       return getURLParameters()
     },
@@ -407,13 +475,30 @@ export default {
     },
     // 跳转至入金页面
     jumpDeposit() {
+      const openAccountStatus = this.openAccountStatus
       const isNewOpen = this.urlObj['isnew']
-      handleAppOpen(window.GO_DEPOSIT, isNewOpen)
+      if(openAccountStatus===1){
+        recordApi.getOpenBankType().then((res)=>{
+          const { bankType = 1 } = res
+          if(bankType){
+            handleAppOpen(window.GO_DEPOSIT_CN, isNewOpen)
+          }else {
+            handleAppOpen(window.GO_DEPOSIT_HK, isNewOpen)
+          }
+        })
+      } else {
+        handleAppOpen(window.OPEN_ACCOUNT, isNewOpen)
+      }
     },
     // 跳转至转仓页面
     jumpTransferStk() {
+      const openAccountStatus = this.openAccountStatus
       const isNewOpen = this.urlObj['isnew']
-      handleAppOpen(window.GO_INTO_STOCK, isNewOpen)
+      if(openAccountStatus===1){
+        handleAppOpen(window.GO_INTO_STOCK, isNewOpen)
+      }else{
+        handleAppOpen(window.OPEN_ACCOUNT, isNewOpen)
+      }
     },
 
     // 弹出【立即开户】模态框
@@ -429,24 +514,33 @@ export default {
 
     // 弹出【立即入金】模态框
     showDepositPopup() {
-      const component = this.$refs.depositPopup
-      component.show()
+      this.modalBox2 = true
+      this.$nextTick(() => {
+        this.$refs.scrollRule2.refresh();
+      })
+      // const component = this.$refs.depositPopup
+      // component.show()
     },
     // 关闭【立即入金】模态框
     closeDepositPopup() {
-      const component = this.$refs.depositPopup
-      component.hide()
+      this.modalBox2 = false
+      // component.hide()
     },
 
     // 弹出【立即转仓】模态框
     showTransferPopup() {
-      const component = this.$refs.transferPopup
-      component.show()
+      this.modalBox3 = true
+      this.$nextTick(() => {
+        this.$refs.scrollRule3.refresh();
+      })
+      // const component = this.$refs.transferPopup
+      // component.show()
     },
     // 关闭【立即转仓】模态框
     closeTransferPopup() {
-      const component = this.$refs.transferPopup
-      component.hide()
+      this.modalBox3 = false
+      // const component = this.$refs.transferPopup
+      // component.hide()
     },
 
     // 弹出【入金规则】模态框
@@ -482,9 +576,10 @@ export default {
       // 领取奖励
       recordApi.postFetchRewardConfirm(params).then(res => {
         console.log('确认领取==>', res)
+        this.getWaitReceiveStock()
       })
       this.visibleYHS = false
-      this.getWaitReceiveStock()
+      // this.getWaitReceiveStock()
     },
     // 赠股取消模态框
     getStockCancel() {
@@ -527,42 +622,72 @@ export default {
     },
     // 点击分享
     goShare(item) {
-      const {
-        stkName,
-        minNumber,
-        minIncome
-      } = item
-      const params = {
-        stkName,
-        stkQuantity: minNumber,
-        mktValue: minIncome,
-        shareUrl: window.SHARE_ADDRESS
-      }
-      const that = this
-      let versionIOS = -1
-      let versionAndroid = -1
-      if (UserAge.isApp()) {
-        getMobileInfo({
-          success: function (res) {
+      if (UserAge.isApp()){
+        // APP环境直接获取用户信息
+        getUserInfoAPP({
+          success: res => {
             const result = JSON.parse(res.data)
-            versionIOS = compareVersion(result.appVersion, window.IOS_VERSION)
-            versionAndroid = compareVersion(result.appVersion, window.ANDROID_VERSION)
-            if ((UserAge.isIOS() && versionIOS >= 0) || (UserAge.isAndroid() && versionAndroid >= 0)) {
-              // 大于最新版本才可以做分享动作
-              giftStockShare(params)
-
-            } else {
-              // 小于这个版本则做alert提示
-              alert({ title: '提示', content: '请下载最新版APP' })
+            this.UserCode = result.UserCode
+            const UserCode = this.UserCode
+            const url =`${window.SHARE_ADDRESS}&invUserId=${UserCode}`
+            // console.log('shareurl',url)
+            const {
+              stkName,
+              minNumber,
+              minIncome
+            } = item
+            const params = {
+              stkName,
+              stkQuantity: minNumber,
+              mktValue: minIncome,
+              shareUrl: url
             }
+            let versionIOS = -1
+            let versionAndroid = -1
+            getMobileInfo({
+              success: function (res) {
+                const result = JSON.parse(res.data)
+                versionIOS = compareVersion(result.appVersion, window.IOS_VERSION)
+                versionAndroid = compareVersion(result.appVersion, window.ANDROID_VERSION)
+                if ((UserAge.isIOS() && versionIOS >= 0) || (UserAge.isAndroid() && versionAndroid >= 0)) {
+                  // 大于最新版本才可以做分享动作
+                  giftStockShare(params)
+                } else {
+                  // 小于这个版本则做alert提示
+                  alert({ title: '提示', content: '该功能需要新版本才能使用哦，请立即升级' })
+                }
+              }
+            })
           }
         })
+
       }
+      // getUserInfoAPP().then((res)=>{
+      //   const {uId = 1 } = res.UserCode
+      // })
+
+      // if (UserAge.isApp()) {
+      //   getMobileInfo({
+      //     success: function (res) {
+      //       const result = JSON.parse(res.data)
+      //       versionIOS = compareVersion(result.appVersion, window.IOS_VERSION)
+      //       versionAndroid = compareVersion(result.appVersion, window.ANDROID_VERSION)
+      //       if ((UserAge.isIOS() && versionIOS >= 0) || (UserAge.isAndroid() && versionAndroid >= 0)) {
+      //         // 大于最新版本才可以做分享动作
+      //         giftStockShare(params)
+      //       } else {
+      //         // 小于这个版本则做alert提示
+      //         alert({ title: '提示', content: '请下载最新版APP' })
+      //       }
+      //     }
+      //   })
+      // }
       // console.log('params:' + JSON.stringify(params))
     },
     getDepositStatus() {
       recordApi.findCrmUserStatus().then(res => {
         this.depositStatus = res.depositStatus // 是否入金
+        this.openAccountStatus = res.openAccountStatus // 是否开户
       })
     }
   }

@@ -72,7 +72,7 @@ export default {
     .profit
       color $black-theme-fff
     .number
-      color $black-theme-f95a29
+      color #EB333B
     .percent
-      color $black-theme-f95a29
+      color #EB333B
 </style>

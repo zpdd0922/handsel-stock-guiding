@@ -12,7 +12,9 @@ var STOCK_DOWNLOAD = HOST_URL + '/webstatic/downApp/download_stock.html'
 
 var OPEN_ACCOUNT = HOST_URL + '/sunline/open-account/index.html' // 开户地址
 
-var GO_DEPOSIT = HOST_URL + '/sunline/main/#/security-service/deposit/' // 入金地址
+var GO_DEPOSIT_CN = HOST_URL + '/sunline/main/#/security-service/deposit/' // 大陆卡开户入金地址
+
+var GO_DEPOSIT_HK = HOST_URL + '/sunline/main/#/security-service/deposit-hk/' // 大陆卡开户入金地址
 
 var GO_INTO_STOCK = HOST_URL + '/sunline/main/#/security-service/into-stock/' // 转仓地址
 
@@ -20,7 +22,7 @@ var ACTIVE_CENTER_GOLD = HOST_URL + '/sunline/active-center/index.html?type=1' /
 
 var ACTIVE_CENTER_STOCK = HOST_URL + '/sunline/active-center/index.html?type=2' // 奖品中心地址(转仓奖励)
 
-var SHARE_ADDRESS = HOST_URL +'/sunline/active/2018/mould1/index.html?actId=164' // 分享地址
+var SHARE_ADDRESS = HOST_URL +'/sunline/active/2018/mould1/index.html?actId=164&channelId=666' // 分享地址
 
 // ios犇犇版本号
 var IOS_VERSION = '1.7.18'
