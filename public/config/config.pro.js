@@ -22,7 +22,7 @@ var ACTIVE_CENTER_GOLD = HOST_URL + '/sunline/active-center/index.html?type=1' /
 
 var ACTIVE_CENTER_STOCK = HOST_URL + '/sunline/active-center/index.html?type=2' // 奖品中心地址(转仓奖励)
 
-var SHARE_ADDRESS = HOST_URL +'/sunline/active/2018/mould1/index.html?actId=164&channelId=666' // 分享地址
+var SHARE_ADDRESS = HOST_URL +'/sunline/active/2018/mould1/index.html?actId=67&channelId=666' // 分享地址
 
 // ios犇犇版本号
 var IOS_VERSION = '1.7.18'
