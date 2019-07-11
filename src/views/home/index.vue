@@ -412,7 +412,8 @@ export default {
             rewardId,
             configItemId,
             isExpired,
-            ruleList
+            ruleList,
+            displayValidity
           } = stockList[index]
           const FTminMktValue = formatNum(minMktValue)
           const FTmaxMktValue = formatNum(maxMktValue)
@@ -437,7 +438,8 @@ export default {
             rewardId,
             configItemId,
             isExpired,
-            ruleList
+            ruleList,
+            displayValidity
           }
           newStockArr.push(stockObj)
           // 获取对应的领取奖励规则

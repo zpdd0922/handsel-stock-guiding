@@ -62,7 +62,8 @@
       <!-- 领取条件 -->
       <ul class="lineBox">
         <li class="leftPart">
-          <p class="title">领取条件/有效期</p>
+          <p v-if="item.displayValidity === 1" class="title">领取条件/有效期</p>
+          <p v-if="item.displayValidity === 0" class="title">领取条件</p>
           <p>
             <span v-if="item.activeType === 1" class="txtLeft"
               >首次开户成功</span
@@ -79,7 +80,7 @@
                 @click="handleClickQuestion(item)"
               ></i>
             </span>
-            <span class="txtRight">{{ item.validityPeriod }}</span>
+            <span v-if="item.displayValidity === 1" class="txtRight">{{ item.validityPeriod }}</span>
           </p>
         </li>
         <!-- 按钮状态判断 -->
