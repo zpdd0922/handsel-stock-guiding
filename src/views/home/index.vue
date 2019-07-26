@@ -58,11 +58,31 @@
           </p>
           <h2 class="stkQuantity">{{ openAccountRuleList.stkQuantity }}股</h2>
           <p class="tips">开户成功即可领取</p>
+          <p class="tips-hk">*如香港银行卡开户则需入金满1万港币才可领取</p>
         </div>
         <div class="clickBtn" @click="jumpOpenAccount">
           <p>立即开户</p>
         </div>
         <div class="closeBtn" @click="closeOpenAccountPopup"></div>
+      </div>
+    </cube-popup>
+
+  <!-- 香港卡入金未满一万 -->
+    <cube-popup
+      type="my-popup"
+      position="center"
+      :mask-closable="false"
+      ref="depositHKNoPopup"
+    >
+      <div class="modelBox">
+        <div class="content">
+          <p class="hk-icon"></p>
+          <p class="hk-tips">入金一万港币及其以上即可领取</p>
+        </div>
+        <div class="clickBtn" @click="jumpDeposit">
+          <p>立即入金</p>
+        </div>
+        <div class="closeBtn" @click="closeDepositHKNoPopup"></div>
       </div>
     </cube-popup>
 
@@ -345,6 +365,7 @@ export default {
       modalBox2: false, // 入金规则弹框是否展示
       modalBox3: false, // 转仓规则弹框是否展示
       UserCode: 1, //用户犇犇号
+      accountLevel: 0 // 是否为标准状态
     }
   },
   computed: {
@@ -514,6 +535,17 @@ export default {
       component.hide()
     },
 
+    // 香港卡开户入金未满一万弹出【立即入金】模态框
+    showDepositHKNoPopup() {
+      const component = this.$refs.depositHKNoPopup
+      component.show()
+    },
+
+    closeDepositHKNoPopup() {
+      const component = this.$refs.depositHKNoPopup
+      component.hide()
+    },
+
     // 弹出【立即入金】模态框
     showDepositPopup() {
       this.modalBox2 = true
@@ -589,6 +621,7 @@ export default {
     },
     // 点击【立即领取】
     getReward(item) {
+      console.log('item', item)
       const activeType = item.activeType
       const busType = item.busType
       if (busType === 0 || busType === 1 || busType === 2) {
@@ -606,8 +639,12 @@ export default {
         }
       }
       if (busType === 3) {
-        this.awardObj = item
-        this.showStockBox()
+        if (this.accountLevel === 2) {
+          this.showDepositHKNoPopup()
+        } else {
+          this.awardObj = item
+          this.showStockBox()
+        }
       }
     },
     // 点击【问号】
@@ -690,6 +727,7 @@ export default {
       recordApi.findCrmUserStatus().then(res => {
         this.depositStatus = res.depositStatus // 是否入金
         this.openAccountStatus = res.openAccountStatus // 是否开户
+        this.accountLevel = res.accountLevel // 是否开户
       })
     }
   }

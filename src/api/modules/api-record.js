@@ -37,6 +37,7 @@ export default {
    * transferStatus:    转仓状态，1 已转仓； 0 未转仓
    * userRegStatus:     开户状态，1 已注册； 0 未注册
    * withdrawalStatus:   出金状态， 1 已出金； 0 未出金
+   * accountLevel:    [0-未知 1-预批账户 2-非标准账户 3-标准账户]
    * */
   findCrmUserStatus: data =>
     axios.post('/open_api/findCrmUserStatus', paramsData.COMMON(data)),
