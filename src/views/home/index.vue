@@ -639,7 +639,7 @@ export default {
         }
       }
       if (busType === 3) {
-        if (this.accountLevel === 2) {
+        if (this.accountLevel !== 3) {
           this.showDepositHKNoPopup()
         } else {
           this.awardObj = item
