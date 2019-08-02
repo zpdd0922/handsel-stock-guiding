@@ -327,7 +327,7 @@ import Stockvalue from './components/stockvalue.vue'
 import StockList from './components/stockList.vue'
 import recordApi from '@/api/modules/api-record'
 import { giftStockShare, getMobileInfo, getUserInfoAPP } from '@/native-app/native-api'
-import { alert } from '@/utils/tips'
+import { alert,toast } from '@/utils/tips'
 import { mapState, mapGetters } from 'vuex'
 
 export default {
@@ -365,7 +365,7 @@ export default {
       modalBox2: false, // 入金规则弹框是否展示
       modalBox3: false, // 转仓规则弹框是否展示
       UserCode: 1, //用户犇犇号
-      accountLevel: 0 // 是否为标准状态
+      accountLevel: 0 // 是否为标准状态 [0-未知 1-预批账户 2-非标准账户 3-标准账户]
     }
   },
   computed: {
@@ -464,6 +464,7 @@ export default {
           }
           newStockArr.push(stockObj)
           // 获取对应的领取奖励规则
+          // 开户奖励
           if (stockList[index].activeType === 1) {
             this.openAccountRuleList = stockList[index].ruleList[0]
             const RwObj = {
@@ -472,6 +473,7 @@ export default {
             }
             this.headingStockOa = RwObj
           }
+          // 入金奖励
           if (stockList[index].activeType === 2) {
             this.depositRwList = stockList[index].ruleList
             this.depositRwStkName = stockList[index].ruleList[0].stkName || ''
@@ -481,6 +483,7 @@ export default {
             }
             this.headingStockDe = RwObj
           }
+          // 转仓奖励
           if (stockList[index].activeType === 3) {
             this.transferRwList = stockList[index].ruleList
             this.transferRwStkName = stockList[index].ruleList[0].stkName || ''
@@ -622,30 +625,85 @@ export default {
     // 点击【立即领取】
     getReward(item) {
       console.log('item', item)
-      const activeType = item.activeType
+      const activeType = item.activeType  // 奖励股票来源类型： 1 开户赠送类型；2入金赠送类型； 3 转仓赠送类型
       const busType = item.busType
-      if (busType === 0 || busType === 1 || busType === 2) {
-        // 开户奖励规则弹框
-        if (activeType === 1) {
+      // 	0:未入金或未转仓或未开户 1:已入金或已转仓或已开户 2:入金或转仓未达到奖励条件 3:有待领取的奖励 4:已到账 5:已入持仓 6:已拒绝
+
+      // 1.开户赠送股票领取判断
+      if (activeType === 1) {
+        // 是否开户，未开户，引导开户
+        if(busType===0) {
           this.showOpenAccountPopup()
+        }else{
+          if(this.accountLevel !== 3){
+            // 非标准账户展示非标准账户入金引导弹框
+            this.showDepositHKNoPopup()
+          }else{
+            // 若为标准账户，判断系统奖励是否发送，发送则展示领取弹框，没发送则toas提示系统正在发放中
+            if(busType===3) {
+              this.awardObj = item
+              this.showStockBox()
+            } else{
+              toast({txt:'奖励正在发放中，请稍后再来领取~'})
+            }
+          }
         }
-        // 入金奖励规则弹框
-        if (activeType === 2) {
+      }
+
+      // 2.入金赠送股票领取判断
+      if(activeType === 2) {
+        // 判断是否入金，如果未入金/或已入金未到达奖励条件的，展示入金引导框
+        if(busType===0 || busType===2) {
           this.showDepositPopup()
+        }else{
+          // 如果已入金，判断系统奖励是否发送，发送则展示领取弹框，没发送则toas提示系统正在发放中
+          if(busType===3) {
+            this.awardObj = item
+            this.showStockBox()
+          }else{
+            toast({txt:'奖励正在发放中，请稍后再来领取~'})
+          }
         }
-        // 转仓奖励规则弹框
-        if (activeType === 3) {
+      }
+
+      // 3.转仓赠送股票领取判断
+      if(activeType === 3) {
+        // 判断是否转仓，如果未转仓/或已转仓未到达奖励条件的，展示转仓引导框
+        if(busType===0 || busType===2) {
           this.showTransferPopup()
+        }else{
+          // 如果已转仓，判断系统奖励是否发送，发送则展示领取弹框，没发送则toas提示系统正在发放中
+          if(busType===3) {
+            this.awardObj = item
+            this.showStockBox()
+          }else{
+            toast({txt:'奖励正在发放中，请稍后再来领取~'})
+          }
         }
       }
-      if (busType === 3) {
-        if (this.accountLevel !== 3) {
-          this.showDepositHKNoPopup()
-        } else {
-          this.awardObj = item
-          this.showStockBox()
-        }
-      }
+
+      // if (busType === 0 || busType === 1 || busType === 2) {
+      //  // 开户奖励规则弹框
+     //   if (activeType === 1) {
+      //     this.showOpenAccountPopup()
+      //   }
+      //   // 入金奖励规则弹框
+      //   if (activeType === 2) {
+      //     this.showDepositPopup()
+      //   }
+      //   // 转仓奖励规则弹框
+      //   if (activeType === 3) {
+      //     this.showTransferPopup()
+      //   }
+      // }
+      // if (busType === 3) {
+      //   if (this.accountLevel !== 3) {
+      //     this.showDepositHKNoPopup()
+      //   } else {
+      //     this.awardObj = item
+      //     this.showStockBox()
+      //   }
+      // }
     },
     // 点击【问号】
     getRule(item) {
