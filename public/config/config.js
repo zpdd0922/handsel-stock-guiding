@@ -2,7 +2,9 @@
 // 配置文件，适用非生产环境
 
 // 请求地址
-var HOST_URL = location.origin
+// var HOST_URL = location.origin
+// var HOST_URL = 'http://121.35.249.12:9003'  // 开发环境
+var HOST_URL = 'http://121.35.249.14:9003'  // 测试环境
 
 // 统一用户模块
 var USER_CENTER = HOST_URL + '/sunline/user-center/index.html'

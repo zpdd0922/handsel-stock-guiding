@@ -58,7 +58,7 @@
           </p>
           <h2 class="stkQuantity">{{ openAccountRuleList.stkQuantity }}股</h2>
           <p class="tips">开户成功即可领取</p>
-          <p class="tips-hk">*如香港银行卡开户则需入金满1万港币才可领取</p>
+          <p class="tips-hk">*如香港银行卡开户则需首笔入金一万港币或以上才可领取</p>
         </div>
         <div class="clickBtn" @click="jumpOpenAccount">
           <p>立即开户</p>
@@ -77,7 +77,7 @@
       <div class="modelBox">
         <div class="content">
           <p class="hk-icon"></p>
-          <p class="hk-tips">入金一万港币及其以上即可领取</p>
+          <p class="hk-tips">首笔入金一万港币或以上即可领取</p>
         </div>
         <div class="clickBtn" @click="jumpDeposit">
           <p>立即入金</p>
