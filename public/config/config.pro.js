@@ -4,6 +4,9 @@
 // 请求地址
 var HOST_URL = 'https://sns.9fstock.com'
 
+// 官网好友邀请活动
+var OFFICIAL_URL = HOST_URL + '/sunline/active/2019/official-friends-invite/index.html?channelId=666'
+
 // 统一用户模块
 var USER_CENTER = HOST_URL + '/sunline/user-center/index.html'
 

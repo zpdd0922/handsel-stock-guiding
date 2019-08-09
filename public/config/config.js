@@ -6,6 +6,9 @@
 // var HOST_URL = 'http://121.35.249.12:9003'  // 开发环境
 var HOST_URL = 'http://121.35.249.14:9003'  // 测试环境
 
+// 官网好友邀请活动
+var OFFICIAL_URL = HOST_URL + '/sunline/active/2019/official-friends-invite/index.html?channelId=666'
+
 // 统一用户模块
 var USER_CENTER = HOST_URL + '/sunline/user-center/index.html'
 

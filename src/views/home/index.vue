@@ -1,6 +1,6 @@
 <template>
   <div :class="['data-wrap', `data-wrap-${skin}`]">
-    <cube-scroll :class="['bg-wrap', `bg-wrap-${skin}`]">
+    <cube-scroll v-if="this.stockList.length>0" :class="['bg-wrap', `bg-wrap-${skin}`]">
       <div :class="['container', `container-${skin}`]">
         <!-- 指引组件 -->
         <template>
@@ -38,6 +38,40 @@
         </div>
       </div>
     </cube-scroll>
+    <!-- 待领取股票列表为空时，显示暂无赠股记录 -->
+    <div v-else :class="['empty-wrap', `empty-wrap-${skin}`]">
+      <!-- 1.大陆用户显示“暂无赠股记录”和下方邀好友的banner-->
+      <template v-if="!isHK">
+        <div class="no-record-wrap">
+          <div class="empty"></div>
+          <p>暂无记录</p>
+        </div>
+        <div class="actvity-wrap">
+          <div class="titleBox">
+            <h4>热门活动推荐</h4>
+          </div>
+          <div class="banner-bg">
+            <div class="leftPart">
+              <div class="title">邀好友 赏金无上限</div>
+              <p class="desc1">每邀1人可得<span>310</span>元</p>
+              <p class="desc2"> 好友拿股票你赚现金</p>
+            </div>
+            <div class="rightPart">
+              <div class="invite-btn" @click="jumpOfficalActivity">
+                <p class="txt">去邀请<span class="banner-arrow"></span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+      <!-- 2、香港地区只显示上方文案“暂无赠股记录”-->
+      <template v-else>
+        <div class="no-record-wrap">
+          <div class="empty"></div>
+          <p>暂无记录</p>
+        </div>
+      </template>
+    </div>
 
     <!-- 立即开户弹框 -->
     <cube-popup
@@ -329,6 +363,7 @@ import recordApi from '@/api/modules/api-record'
 import { giftStockShare, getMobileInfo, getUserInfoAPP } from '@/native-app/native-api'
 import { alert,toast } from '@/utils/tips'
 import { mapState, mapGetters } from 'vuex'
+import getIPaddress from '@/mixins/getIpAddress';
 
 export default {
   components: {
@@ -365,13 +400,14 @@ export default {
       modalBox2: false, // 入金规则弹框是否展示
       modalBox3: false, // 转仓规则弹框是否展示
       UserCode: 1, //用户犇犇号
-      accountLevel: 0 // 是否为标准状态 [0-未知 1-预批账户 2-非标准账户 3-标准账户]
+      accountLevel: 0, // 是否为标准状态 [0-未知 1-预批账户 2-非标准账户 3-标准账户]
+      isHK: false // 判断是否为香港IP地址
     }
   },
   computed: {
-    // ...mapGetters([
-    //   'userInfo'
-    // ]),
+    ...mapGetters([
+      'userInfo'
+    ]),
     urlObj() {
       return getURLParameters()
     },
@@ -384,9 +420,10 @@ export default {
     // 判断当前路由环境
     origin() {
       return UserAge.isApp() ? 'app' : 'h5'
-    }
+    },
   },
   created() {
+    this.checkIpAddress()
     // 查询开户状态
     this.getOpenStatus()
     // 查询待领取股票
@@ -402,12 +439,25 @@ export default {
         // this.depositStatus = res.depositStatus // 是否入金
       })
     },
+    // 查询IP地址,判断是否为香港ip
+    checkIpAddress() {
+      getIPaddress()
+        .then(res => {
+          const { isHK } = res;
+          this.isHK = isHK
+        })
+    },
+    // 跳转到官网好友邀请活动
+    jumpOfficalActivity() {
+      window.location.href = window.OFFICIAL_URL
+    },
     // 查询待领取股票
     getWaitReceiveStock() {
       recordApi.getWaitReceiveStock().then(res => {
         console.log('待领取股票res', res)
         const stockList = res.stockList
         this.stockList = res.stockList
+        console.log('this.stockList.length', this.stockList.length)
         this.mktValueAll = formatNum(res.mktValueAll)
         this.changeAll = formatNum(res.changeAll)
         const changePctAll = mul(res.changePctAll, 100)

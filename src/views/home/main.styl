@@ -53,7 +53,134 @@
     // border-1px('bottom', $white-theme-2e2e33)
     p
       color: $black-theme-fff;
+
+// 暂无记录
+.empty-wrap
+  .no-record-wrap
+    .empty
+      bg-image('empty',ture)
+    p
+      color $white-theme-333;
+  .titleBox
+    h4
+      color $white-theme-333;
+      &:before
+        background: #ccc;
+      &:after
+        background: #ccc;
  
+.empty-wrap-black
+  .no-record-wrap
+    .empty
+      bg-image('empty-white',ture)
+    p
+      color $white-theme-999;
+  .titleBox
+    h4
+      color $white-theme-fff;
+      &:before
+        background: #3c3c3d; 
+      &:after
+        background: #3c3c3d; 
+
+.actvity-wrap
+  width 100%
+  position fixed
+  bottom 120px
+
+.no-record-wrap
+  box-sizing border-box
+  height 500px
+  padding-top 260px
+  .empty
+    width 172px
+    height 125px
+    background-size 100% 100%
+    margin 0 auto 20px
+  p
+    height 26px
+    font-size:26px;
+    font-weight:400;
+    color:rgba(153,153,153,1);
+    line-height:66px;
+    text-align center
+
+.titleBox
+  height 32px
+  text-align center
+  margin-bottom 70px
+  h4
+    height:31px;
+    font-size:32px;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+    line-height:39px;
+    position relative
+    &:before
+      content: '';                 /*CSS伪类用法*/
+      position: absolute;         /*定位背景横线的位置*/
+      top: 52%;
+      width: 30%;
+      height: 2px;
+      left: 4%;
+    &:after
+      content: '';                 /*CSS伪类用法*/
+      position: absolute;         /*定位背景横线的位置*/
+      top: 52%;
+      width: 30%;
+      height: 2px;
+      right: 4%;
+  
+.banner-bg
+  box-sizing border-box
+  width:692px;
+  height:181px;
+  bg-image('banner-bg',ture)
+  background-size 100% 100%
+  margin 0 auto
+  padding  30px 50px 20px 40px
+  display flex
+  justify-content space-between
+  align-items center
+  .leftPart
+    .title
+      height:32px;
+      font-size:32px;
+      font-weight:600;
+      color:rgba(114,65,1,1);
+      line-height:36px;
+      margin-bottom 26px
+    p
+      height:26px;
+      font-size:26px;
+      font-weight:400;
+      color:rgba(114,65,1,1);
+      line-height:26px;
+    .desc1
+      margin-bottom 14px
+    span
+      color #D22525
+  .rightPart
+    .invite-btn
+      width:190px;
+      height:60px;
+      background:linear-gradient(180deg,#fff0bc,#fedb9a);
+      border-radius:30px;
+      text-align center
+    .txt
+      height:60px;
+      font-size:28px;
+      font-weight:600;
+      color:rgba(140,82,8,1);
+      line-height:60px; 
+    .banner-arrow
+      width 22px
+      height 22px
+      display inline-block
+      margin-left 10px
+      bg-image('banner-arrow',ture)
+      background-size 100%
+
 .modelBox
   position relative
   width 610px
