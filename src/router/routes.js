@@ -17,7 +17,7 @@ const routes = [
     path: '/',
     name: 'home',
     component: _import('home'),
-    meta: { title: '待领取股票' }
+    meta: { title: '股票奖励' }
   },
   // 用户登录注册模块
   ...userRouter,

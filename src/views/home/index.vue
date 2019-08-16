@@ -1,6 +1,6 @@
 <template>
   <div :class="['data-wrap', `data-wrap-${skin}`]">
-    <cube-scroll v-if="this.stockList.length>0" :class="['bg-wrap', `bg-wrap-${skin}`]">
+    <cube-scroll v-if="stockList.length>0" :class="['bg-wrap', `bg-wrap-${skin}`]">
       <div :class="['container', `container-${skin}`]">
         <!-- 指引组件 -->
         <template>
@@ -39,7 +39,7 @@
       </div>
     </cube-scroll>
     <!-- 待领取股票列表为空时，显示暂无赠股记录 -->
-    <div v-else :class="['empty-wrap', `empty-wrap-${skin}`]">
+    <div v-if="stockList.length===0 && isRequestOk" :class="['empty-wrap', `empty-wrap-${skin}`]">
       <!-- 1.大陆用户显示“暂无赠股记录”和下方邀好友的banner-->
       <template v-if="!isHK">
         <div class="no-record-wrap">
@@ -401,7 +401,8 @@ export default {
       modalBox3: false, // 转仓规则弹框是否展示
       UserCode: 1, //用户犇犇号
       accountLevel: 0, // 是否为标准状态 [0-未知 1-预批账户 2-非标准账户 3-标准账户]
-      isHK: false // 判断是否为香港IP地址
+      isHK: false, // 判断是否为香港IP地址
+      isRequestOk: false
     }
   },
   computed: {
@@ -423,11 +424,11 @@ export default {
     },
   },
   created() {
+    // 查询待领取股票
+    this.getWaitReceiveStock()
     this.checkIpAddress()
     // 查询开户状态
     this.getOpenStatus()
-    // 查询待领取股票
-    this.getWaitReceiveStock()
     this.getDepositStatus()
   },
   methods: {
@@ -457,7 +458,8 @@ export default {
         console.log('待领取股票res', res)
         const stockList = res.stockList
         this.stockList = res.stockList
-        console.log('this.stockList.length', this.stockList.length)
+        this.isRequestOk = true
+        // console.log('this.stockList.length', this.stockList.length)
         this.mktValueAll = formatNum(res.mktValueAll)
         this.changeAll = formatNum(res.changeAll)
         const changePctAll = mul(res.changePctAll, 100)
