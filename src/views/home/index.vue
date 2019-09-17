@@ -413,6 +413,10 @@ export default {
       return getURLParameters()
     },
     skin() {
+      const theme = this.userInfo.skin
+      if (theme) {
+        return theme.toLowerCase()
+      }
       return this.urlObj['skin']
     },
     isHead() {
