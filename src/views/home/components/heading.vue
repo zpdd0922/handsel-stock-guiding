@@ -123,12 +123,12 @@ export default {
       handleAppOpen(url, this.urlObj['isnew'])
     },
     DepositHandle() {
-      recordApi.getOpenBankType().then((res)=>{
+      recordApi.getOpenBankType().then((res) => {
         const { bankType = 1 } = res
-        if(bankType){
+        if (bankType) {
           const url = `${window.GO_DEPOSIT_CN}?skin=${this.skin}`
           handleAppOpen(url, this.urlObj['isnew'])
-        }else {
+        } else {
           const url = `${window.GO_DEPOSIT_HK}?skin=${this.skin}`
           handleAppOpen(url, this.urlObj['isnew'])
         }

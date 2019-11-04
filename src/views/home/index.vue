@@ -14,7 +14,7 @@
 
           <!-- 指导框 -->
           <Heading
-            v-if="depositStatus===0" 
+            v-if="depositStatus===0"
             :list="openStatusObj"
             :skin="skin"
             :urlObj="urlObj"
@@ -92,7 +92,7 @@
           </p>
           <h2 class="stkQuantity">{{ openAccountRuleList.stkQuantity }}股</h2>
           <p class="tips">开户成功即可领取</p>
-          <p class="tips-hk">*如香港银行卡开户则需首笔入金一万港币或以上才可领取</p>
+          <p class="tips-hk">*如香港银行卡开户则需首笔入金1.1万港币或以上才可领取</p>
         </div>
         <div class="clickBtn" @click="jumpOpenAccount">
           <p>立即开户</p>
@@ -111,7 +111,7 @@
       <div class="modelBox">
         <div class="content">
           <p class="hk-icon"></p>
-          <p class="hk-tips">首笔入金一万港币或以上即可领取</p>
+          <p class="hk-tips">首笔入金1.1万港币或以上即可领取</p>
         </div>
         <div class="clickBtn" @click="jumpDeposit">
           <p>立即入金</p>
@@ -119,78 +119,6 @@
         <div class="closeBtn" @click="closeDepositHKNoPopup"></div>
       </div>
     </cube-popup>
-
-    <!-- 立即入金 -->
-    <!-- <cube-popup
-      type="my-popup"
-      position="center"
-      :mask-closable="false"
-      ref="depositPopup"
-    >
-      <div class="modelBox2">
-        <div class="head">
-          <p class="title">恭喜您</p>
-        </div>
-        <div class="content">
-          <p class="getStock">
-            获取<span class="stkName">【{{ depositRwStkName }}】</span
-            >股票奖励，
-          </p>
-          <p class="tips">入金满相应额度即可领取</p>
-          <table>
-            <tr>
-              <th>首次入金满</th>
-              <th>奖励股票</th>
-            </tr>
-            <tr v-for="(item, index) in depositRwList" :key="index">
-              <td>{{ item.curreny }}{{ item.amount }}</td>
-              <td>{{ item.stkQuantity }}股{{ item.stkName }}</td>
-            </tr>
-          </table>
-        </div>
-        <div class="clickBtn" @click="jumpDeposit">
-          <p>立即入金</p>
-        </div>
-        <div class="closeBtn" @click="closeDepositPopup"></div>
-      </div>
-    </cube-popup> -->
-
-    <!-- 立即转仓 -->
-    <!-- <cube-popup
-      type="my-popup"
-      position="center"
-      :mask-closable="false"
-      ref="transferPopup"
-    >
-      <div class="modelBox3">
-        <div class="head">
-          <p class="title">恭喜您</p>
-        </div>
-        <div class="content">
-          <p class="getStock">
-            获取<span class="stkName">【{{ transferRwStkName }}】</span
-            >股票奖励，
-          </p>
-          <p class="tips">转仓市值满相应额度即可领取</p>
-          <table>
-            <tr>
-              <th>首次转仓满</th>
-              <th>奖励股票</th>
-            </tr>
-            <tr v-for="(item, index) in transferRwList" :key="index">
-              <td>{{ item.curreny }}{{ item.amount }}</td>
-              <td>{{ item.stkQuantity }}股{{ item.stkName }}</td>
-            </tr>
-          </table>
-
-          <p class="bottomTxt">*仅限大陆CA开户用户</p>
-        </div>
-        <div class="clickBtn" @click="jumpTransferStk">
-          <p>立即转仓</p>
-        </div>
-        <div class="closeBtn" @click="closeTransferPopup"></div>
-      </div>
-    </cube-popup> -->
 
     <!-- 入金规则 -->
     <cube-popup
@@ -279,7 +207,7 @@
     </template>
     <!-- 新版去入金弹框 -->
     <template>
-      <jf-dialog 
+      <jf-dialog
         :visible="modalBox2"
         class="depositModule2"
         @confirm="jumpDeposit"
@@ -313,7 +241,7 @@
 
     <!--新版去转仓弹框  -->
     <template>
-      <tr-dialog 
+      <tr-dialog
         :visible="modalBox3"
         class="depositModule3"
         @confirm="jumpTransferStk"
@@ -346,7 +274,6 @@
       </tr-dialog>
     </template>
 
-
   </div>
 </template>
 
@@ -361,9 +288,9 @@ import Stockvalue from './components/stockvalue.vue'
 import StockList from './components/stockList.vue'
 import recordApi from '@/api/modules/api-record'
 import { giftStockShare, getMobileInfo, getUserInfoAPP } from '@/native-app/native-api'
-import { alert,toast } from '@/utils/tips'
-import { mapState, mapGetters } from 'vuex'
-import getIPaddress from '@/mixins/getIpAddress';
+import { alert, toast } from '@/utils/tips'
+import { mapGetters } from 'vuex'
+import getIPaddress from '@/mixins/getIpAddress'
 
 export default {
   components: {
@@ -399,10 +326,11 @@ export default {
       openAccountStatus: 0, // 是否开户
       modalBox2: false, // 入金规则弹框是否展示
       modalBox3: false, // 转仓规则弹框是否展示
-      UserCode: 1, //用户犇犇号
+      UserCode: 1, // 用户犇犇号
       accountLevel: 0, // 是否为标准状态 [0-未知 1-预批账户 2-非标准账户 3-标准账户]
       isHK: false, // 判断是否为香港IP地址
-      isRequestOk: false
+      isRequestOk: false,
+      openType: '' // 获取开户方式[0-香港卡开户 1-CA开户]
     }
   },
   computed: {
@@ -425,7 +353,7 @@ export default {
     // 判断当前路由环境
     origin() {
       return UserAge.isApp() ? 'app' : 'h5'
-    },
+    }
   },
   created() {
     // 查询待领取股票
@@ -448,7 +376,7 @@ export default {
     checkIpAddress() {
       getIPaddress()
         .then(res => {
-          const { isHK } = res;
+          const { isHK } = res
           this.isHK = isHK
         })
     },
@@ -546,7 +474,6 @@ export default {
           }
         }
         this.newStockList = newStockArr
-        console.log('this.newstockList', this.newStockList)
       })
     },
 
@@ -559,12 +486,12 @@ export default {
     jumpDeposit() {
       const openAccountStatus = this.openAccountStatus
       const isNewOpen = this.urlObj['isnew']
-      if(openAccountStatus===1){
-        recordApi.getOpenBankType().then((res)=>{
+      if (openAccountStatus === 1) {
+        recordApi.getOpenBankType().then((res) => {
           const { bankType = 1 } = res
-          if(bankType){
+          if (bankType) {
             handleAppOpen(window.GO_DEPOSIT_CN, isNewOpen)
-          }else {
+          } else {
             handleAppOpen(window.GO_DEPOSIT_HK, isNewOpen)
           }
         })
@@ -576,9 +503,9 @@ export default {
     jumpTransferStk() {
       const openAccountStatus = this.openAccountStatus
       const isNewOpen = this.urlObj['isnew']
-      if(openAccountStatus===1){
+      if (openAccountStatus === 1) {
         handleAppOpen(window.GO_INTO_STOCK, isNewOpen)
-      }else{
+      } else {
         handleAppOpen(window.OPEN_ACCOUNT, isNewOpen)
       }
     },
@@ -609,10 +536,8 @@ export default {
     showDepositPopup() {
       this.modalBox2 = true
       this.$nextTick(() => {
-        this.$refs.scrollRule2.refresh();
+        this.$refs.scrollRule2.refresh()
       })
-      // const component = this.$refs.depositPopup
-      // component.show()
     },
     // 关闭【立即入金】模态框
     closeDepositPopup() {
@@ -624,16 +549,12 @@ export default {
     showTransferPopup() {
       this.modalBox3 = true
       this.$nextTick(() => {
-        this.$refs.scrollRule3.refresh();
+        this.$refs.scrollRule3.refresh()
       })
-      // const component = this.$refs.transferPopup
-      // component.show()
     },
     // 关闭【立即转仓】模态框
     closeTransferPopup() {
       this.modalBox3 = false
-      // const component = this.$refs.transferPopup
-      // component.hide()
     },
 
     // 弹出【入金规则】模态框
@@ -672,94 +593,76 @@ export default {
         this.getWaitReceiveStock()
       })
       this.visibleYHS = false
-      // this.getWaitReceiveStock()
     },
     // 赠股取消模态框
     getStockCancel() {
       this.visibleYHS = false
     },
     // 点击【立即领取】
-    getReward(item) {
-      console.log('item', item)
-      const activeType = item.activeType  // 奖励股票来源类型： 1 开户赠送类型；2入金赠送类型； 3 转仓赠送类型
+    async getReward(item) {
+      const activeType = item.activeType // 奖励股票来源类型： 1 开户赠送类型；2入金赠送类型； 3 转仓赠送类型
       const busType = item.busType
-      // 	0:未入金或未转仓或未开户 1:已入金或已转仓或已开户 2:入金或转仓未达到奖励条件 3:有待领取的奖励 4:已到账 5:已入持仓 6:已拒绝
-
+      // 0:未入金或未转仓或未开户 1:已入金或已转仓或已开户 2:入金或转仓未达到奖励条件 3:有待领取的奖励 4:已到账 5:已入持仓 6:已拒绝
       // 1.开户赠送股票领取判断
       if (activeType === 1) {
         // 是否开户，未开户，引导开户
-        if(busType===0) {
+        if (busType === 0) {
           this.showOpenAccountPopup()
-        }else{
-          if(this.accountLevel !== 3){
-            // 非标准账户展示非标准账户入金引导弹框
-            this.showDepositHKNoPopup()
-          }else{
-            // 若为标准账户，判断系统奖励是否发送，发送则展示领取弹框，没发送则toas提示系统正在发放中
-            if(busType===3) {
+        } else {
+          const result = await recordApi.getOpenBankType()
+          const { bankType } = result
+          if (bankType === 0 && this.depositStatus) {
+            // 判断系统奖励是否发送，发送则展示领取弹框，没发送则toas提示系统正在发放中
+            if (busType === 3) {
               this.awardObj = item
               this.showStockBox()
-            } else{
-              toast({txt:'奖励正在发放中，请稍后再来领取~'})
+            } else {
+              toast({ txt: '奖励正在发放中，请稍后再来领取~' })
+            }
+          } else if (bankType === 0 && !this.depositStatus) {
+            this.showDepositHKNoPopup()
+          } else {
+            // 判断系统奖励是否发送，发送则展示领取弹框，没发送则toas提示系统正在发放中
+            if (busType === 3) {
+              this.awardObj = item
+              this.showStockBox()
+            } else {
+              toast({ txt: '奖励正在发放中，请稍后再来领取~' })
             }
           }
         }
       }
-
       // 2.入金赠送股票领取判断
-      if(activeType === 2) {
+      if (activeType === 2) {
         // 判断是否入金，如果未入金/或已入金未到达奖励条件的，展示入金引导框
-        if(busType===0 || busType===2) {
+        if (busType === 0 || busType === 2) {
           this.showDepositPopup()
-        }else{
+        } else {
           // 如果已入金，判断系统奖励是否发送，发送则展示领取弹框，没发送则toas提示系统正在发放中
-          if(busType===3) {
+          if (busType === 3) {
             this.awardObj = item
             this.showStockBox()
-          }else{
-            toast({txt:'奖励正在发放中，请稍后再来领取~'})
+          } else {
+            toast({ txt: '奖励正在发放中，请稍后再来领取~' })
           }
         }
       }
 
       // 3.转仓赠送股票领取判断
-      if(activeType === 3) {
+      if (activeType === 3) {
         // 判断是否转仓，如果未转仓/或已转仓未到达奖励条件的，展示转仓引导框
-        if(busType===0 || busType===2) {
+        if (busType === 0 || busType === 2) {
           this.showTransferPopup()
-        }else{
+        } else {
           // 如果已转仓，判断系统奖励是否发送，发送则展示领取弹框，没发送则toas提示系统正在发放中
-          if(busType===3) {
+          if (busType === 3) {
             this.awardObj = item
             this.showStockBox()
-          }else{
-            toast({txt:'奖励正在发放中，请稍后再来领取~'})
+          } else {
+            toast({ txt: '奖励正在发放中，请稍后再来领取~' })
           }
         }
       }
-
-      // if (busType === 0 || busType === 1 || busType === 2) {
-      //  // 开户奖励规则弹框
-     //   if (activeType === 1) {
-      //     this.showOpenAccountPopup()
-      //   }
-      //   // 入金奖励规则弹框
-      //   if (activeType === 2) {
-      //     this.showDepositPopup()
-      //   }
-      //   // 转仓奖励规则弹框
-      //   if (activeType === 3) {
-      //     this.showTransferPopup()
-      //   }
-      // }
-      // if (busType === 3) {
-      //   if (this.accountLevel !== 3) {
-      //     this.showDepositHKNoPopup()
-      //   } else {
-      //     this.awardObj = item
-      //     this.showStockBox()
-      //   }
-      // }
     },
     // 点击【问号】
     getRule(item) {
@@ -775,15 +678,14 @@ export default {
     },
     // 点击分享
     goShare(item) {
-      if (UserAge.isApp()){
+      if (UserAge.isApp()) {
         // APP环境直接获取用户信息
         getUserInfoAPP({
           success: res => {
             const result = JSON.parse(res.data)
             this.UserCode = result.UserCode
             const UserCode = this.UserCode
-            const url =`${window.SHARE_ADDRESS}&invUserId=${UserCode}`
-            // console.log('shareurl',url)
+            const url = `${window.SHARE_ADDRESS}&invUserId=${UserCode}`
             const {
               stkName,
               minNumber,
@@ -813,29 +715,7 @@ export default {
             })
           }
         })
-
       }
-      // getUserInfoAPP().then((res)=>{
-      //   const {uId = 1 } = res.UserCode
-      // })
-
-      // if (UserAge.isApp()) {
-      //   getMobileInfo({
-      //     success: function (res) {
-      //       const result = JSON.parse(res.data)
-      //       versionIOS = compareVersion(result.appVersion, window.IOS_VERSION)
-      //       versionAndroid = compareVersion(result.appVersion, window.ANDROID_VERSION)
-      //       if ((UserAge.isIOS() && versionIOS >= 0) || (UserAge.isAndroid() && versionAndroid >= 0)) {
-      //         // 大于最新版本才可以做分享动作
-      //         giftStockShare(params)
-      //       } else {
-      //         // 小于这个版本则做alert提示
-      //         alert({ title: '提示', content: '请下载最新版APP' })
-      //       }
-      //     }
-      //   })
-      // }
-      // console.log('params:' + JSON.stringify(params))
     },
     getDepositStatus() {
       recordApi.findCrmUserStatus().then(res => {
@@ -845,7 +725,6 @@ export default {
       })
     }
   }
-
 }
 </script>
 
