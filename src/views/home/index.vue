@@ -364,6 +364,7 @@ import { giftStockShare, getMobileInfo, getUserInfoAPP } from '@/native-app/nati
 import { alert,toast } from '@/utils/tips'
 import { mapState, mapGetters } from 'vuex'
 import getIPaddress from '@/mixins/getIpAddress';
+import dayjs from 'dayjs'
 
 export default {
   components: {
@@ -511,7 +512,7 @@ export default {
             maxIncome: FTmaxIncome,
             busType,
             activeType,
-            validityPeriod,
+            validityPeriod: dayjs(validityPeriod).subtract(1, 'day').format('YYYY-MM-DD'),
             rewardId,
             configItemId,
             isExpired,
