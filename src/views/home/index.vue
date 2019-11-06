@@ -288,9 +288,9 @@ import Stockvalue from './components/stockvalue.vue'
 import StockList from './components/stockList.vue'
 import recordApi from '@/api/modules/api-record'
 import { giftStockShare, getMobileInfo, getUserInfoAPP } from '@/native-app/native-api'
-import { alert,toast } from '@/utils/tips'
-import { mapState, mapGetters } from 'vuex'
-import getIPaddress from '@/mixins/getIpAddress';
+import { alert, toast } from '@/utils/tips'
+import { mapGetters } from 'vuex'
+import getIPaddress from '@/mixins/getIpAddress'
 import dayjs from 'dayjs'
 
 export default {
