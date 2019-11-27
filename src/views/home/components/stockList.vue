@@ -352,7 +352,7 @@ export default {
     border-name(1px, $white-theme-2e2e33, solid, bottom)
     // border-1px('bottom', $white-theme-2e2e33)
     .title {
-      color:$white-theme-999;
+      color:$black-theme-999;
       border-name(1px, $white-theme-2e2e33, solid, left)
       // border-1px('left', $white-theme-2e2e33)
     }
