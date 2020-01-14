@@ -345,6 +345,7 @@ export default {
     }
   }
 
+
 .stocklist-black
   background-color $black-theme-242426
   .titleHeader{
@@ -393,6 +394,11 @@ export default {
       }
       .txtRight {
         color: $black-theme-fff;
+      }
+    }
+    .rightPart {
+      .btnBox >>> .cube-btn {
+        background-color #fc724c
       }
     }
     .question {
