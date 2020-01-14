@@ -1,10 +1,17 @@
-import axios from '../axios'
+import apiAsync from '../axios'
 import paramsData from '../params/params-wrap'
+import { InterFaceUrl, InterFaceUrl_SEC } from '../config'
 
 export default {
   // 待领取股票接口查询
-  getWaitReceiveStock: data =>
-    axios.post('/reward_center_api/wait_receive_stock', paramsData.WRAP(data)),
+  getWaitReceiveStock: data => apiAsync({
+    method: 'post',
+    url: InterFaceUrl('/reward_center_api/wait_receive_stock'),
+    data: paramsData.WRAP(data),
+    loading: true,
+    catchs: true,
+    toast: true
+  }),
 
   /**
    * 获取开户状态
@@ -24,8 +31,14 @@ export default {
    * 7 开户被拒绝
    * 8 用户取消开户
    */
-  getOpenStatus: data =>
-    axios.post('open_api/processstep', paramsData.WRAP(data)),
+  getOpenStatus: data => apiAsync({
+    method: 'post',
+    url: InterFaceUrl_SEC('/open_api/processstep'),
+    data: paramsData.WRAP(data),
+    loading: true,
+    catchs: true,
+    toast: true
+  }),
 
   // 查询用户状态
   /**
@@ -39,8 +52,14 @@ export default {
    * withdrawalStatus:   出金状态， 1 已出金； 0 未出金
    * accountLevel:    [0-未知 1-预批账户 2-非标准账户 3-标准账户]
    * */
-  findCrmUserStatus: data =>
-    axios.post('/open_api/findCrmUserStatus', paramsData.COMMON(data)),
+  findCrmUserStatus: data => apiAsync({
+    method: 'post',
+    url: InterFaceUrl_SEC('/open_api/findCrmUserStatus'),
+    data: paramsData.WRAP(data),
+    loading: true,
+    catchs: true,
+    toast: true
+  }),
 
   /**
    * 获取开户方式 - 进入对应入金地址
@@ -48,13 +67,22 @@ export default {
    * @return JSON { code: integer, message: string, result: { bankType } }
    * bankType ==> 银行账户类型 [0-香港银行卡 1-大陆银行卡]
    */
-  getOpenBankType: data =>
-    axios.post('/open_api/get_open_bank_type', paramsData.COMMON(data)),
+  getOpenBankType: data => apiAsync({
+    method: 'post',
+    url: InterFaceUrl_SEC('/open_api/get_open_bank_type'),
+    data: paramsData.WRAP(data),
+    loading: true,
+    catchs: true,
+    toast: true
+  }),
 
   // 确认领取奖励
-  postFetchRewardConfirm: data =>
-    axios.post(
-      '/reward_center_api/fetch_reward_confirm',
-      paramsData.COMMON(data)
-    )
+  postFetchRewardConfirm: data => apiAsync({
+    method: 'post',
+    url: InterFaceUrl('/reward_center_api/fetch_reward_confirm'),
+    data: paramsData.WRAP(data),
+    loading: true,
+    catchs: true,
+    toast: true
+  })
 }

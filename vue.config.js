@@ -9,24 +9,40 @@ const resolve = dir => path.join(__dirname, dir)
 // 测试环境
 const target = 'http://10.1.5.125:9003'
 // 代理对象
-const proxy = {}
-const prefixs = [
-  {
-    path: '/dev',
-    target,
+const proxy = {
+  '/dev-url': {
+    target: 'http://121.35.249.14:9003',
+    changeOrigin: true,
     pathRewrite: {
-      '^/dev': ''
+      '^/dev-url': ''
+    }
+  },
+  '/dev-sec': {
+    target: 'http://121.35.249.14:9011',
+    changeOrigin: true,
+    pathRewrite: {
+      '^/dev-sec': ''
     }
   }
-]
-prefixs.forEach(item => {
-  const { path, target, pathRewrite } = item
-  proxy[path] = {
-    target,
-    pathRewrite,
-    changeOrigin: true
-  }
-})
+}
+// const proxy = {}
+// const prefixs = [
+//   {
+//     path: '/dev',
+//     target,
+//     pathRewrite: {
+//       '^/dev': ''
+//     }
+//   }
+// ]
+// prefixs.forEach(item => {
+//   const { path, target, pathRewrite } = item
+//   proxy[path] = {
+//     target,
+//     pathRewrite,
+//     changeOrigin: true
+//   }
+// })
 
 module.exports = {
   // 部署应用包时的基本 URL
@@ -76,6 +92,6 @@ module.exports = {
     port: 8088,
     https: false,
     hotOnly: false,
-    proxy // 设置代理
+    proxy: proxy // 设置代理
   }
 }
