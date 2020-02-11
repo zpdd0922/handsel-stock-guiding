@@ -67,9 +67,13 @@ module.exports = {
         }
       }
     ])
-
+    config
+      .plugin('html')
+      .tap(args => {
+        args[0].time = +new Date()
+        return args
+      })
     config.plugin('transform-modules').use(TransformModulesPlugin)
-
     config.resolve.alias
       .set('@', resolve('src'))
       .set('assets', resolve('src/assets'))
