@@ -1,12 +1,8 @@
 /* eslint-disable */
-// 配置文件，适用非生产环境
 
-// 请求地址
-// var HOST_URL = location.origin
-// var HOST_URL = 'http://121.35.249.12:9003'  // 开发环境
-var HOST_URL = 'http://121.35.249.14:9003'  // 测试环境
+var HOST_URL = window.HOST_BASE_URL  // 测试环境
 // 9011证券服务端口 
-var HOST_URL_SEC = 'http://121.35.249.14:9011'
+var HOST_URL_SEC = window.SEC_URL
 // 官网好友邀请活动
 var OFFICIAL_URL = HOST_URL + '/sunline/active/2019/official-friends-invite/index.html?channelId=666'
 
