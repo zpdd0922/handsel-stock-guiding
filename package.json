@@ -5,10 +5,8 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "vue-cli-service serve",
-    "build:dev": "vue-cli-service build --mode dev",
-    "build:test": "vue-cli-service build --mode test",
-    "build:uat": "vue-cli-service build --mode uat",
-    "build:pro": "vue-cli-service build --mode pro",
+    "build": "vue-cli-service build",
+    "build:debug": "vue-cli-service build --mode debug",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
