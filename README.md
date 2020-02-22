@@ -23,7 +23,6 @@ $ npm run build:debug
 ```
 
 ### 线上地址
-奖品中心
 
 [https://sns.9fstock.com/sunline/handsel-stock-guide/index.html](https://sns.9fstock.com/sunline/handsel-stock-guide/index.html)
 
