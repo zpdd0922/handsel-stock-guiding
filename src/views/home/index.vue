@@ -22,7 +22,7 @@
             :headingStockDe="headingStockDe"
           ></Heading>
           <div class="waitGetStock">
-            <p>待领取股票</p>
+            <p>{{$t('WAIT_GET_STOCK')}}</p>
           </div>
         </template>
 
@@ -44,21 +44,21 @@
       <template v-if="!isHK">
         <div class="no-record-wrap">
           <div class="empty"></div>
-          <p>暂无记录</p>
+          <p>{{$t('EMPTY.NO_RECORD')}}</p>
         </div>
         <div class="actvity-wrap">
           <div class="titleBox">
-            <h4>热门活动推荐</h4>
+            <h4>{{$t('EMPTY.TITLE_BOX')}}</h4>
           </div>
           <div class="banner-bg">
             <div class="leftPart">
-              <div class="title">邀好友 赏金无上限</div>
-              <p class="desc1">每邀1人可得<span>310</span>元</p>
-              <p class="desc2"> 好友拿股票你赚现金</p>
+              <div class="title">{{$t('EMPTY.LEFT_TITLE')}}</div>
+              <p class="desc1" v-html="$t('EMPTY.LEFT_DESC1')"></p>
+              <p class="desc2">{{$t('EMPTY.LEFT_DESE2')}}</p>
             </div>
             <div class="rightPart">
               <div class="invite-btn" @click="jumpOfficalActivity">
-                <p class="txt">去邀请<span class="banner-arrow"></span></p>
+                <p class="txt" v-html="$t('EMPTY.RIGHT_TXT')"></p>
               </div>
             </div>
           </div>
@@ -68,7 +68,7 @@
       <template v-else>
         <div class="no-record-wrap">
           <div class="empty"></div>
-          <p>暂无记录</p>
+          <p>{{$t('EMPTY.NO_RECORD_HK')}}</p>
         </div>
       </template>
     </div>
@@ -82,20 +82,16 @@
     >
       <div class="modelBox">
         <div class="head">
-          <p class="title">恭喜您</p>
+          <p class="title">{{$t('OPEN_ACCOUNT_POPUP.TITLE')}}</p>
         </div>
         <div class="content">
-          <p class="getStock">
-            获取<span class="stkName"
-              >【{{ openAccountRuleList.stkName }}】</span
-            >
-          </p>
-          <h2 class="stkQuantity">{{ openAccountRuleList.stkQuantity }}股</h2>
-          <p class="tips">开户成功即可领取</p>
-          <p class="tips-hk">*如香港银行卡开户则需首笔入金1.1万港币或以上才可领取</p>
+          <p class="getStock" v-html="$t('OPEN_ACCOUNT_POPUP.GET_STOCK', { stkName: openAccountRuleList.stkName })"></p>
+          <h2 class="stkQuantity" v-html="$t('OPEN_ACCOUNT_POPUP.STK_QUANTITY', { stkQuantity: openAccountRuleList.stkQuantity })"></h2>
+          <p class="tips">{{$t('OPEN_ACCOUNT_POPUP.TIPS')}}</p>
+          <p class="tips-hk">{{$t('OPEN_ACCOUNT_POPUP.TIPS_HK')}}</p>
         </div>
         <div class="clickBtn" @click="jumpOpenAccount">
-          <p>立即开户</p>
+          <p>{{$t('OPEN_ACCOUNT_POPUP.BTN')}}</p>
         </div>
         <div class="closeBtn" @click="closeOpenAccountPopup"></div>
       </div>
@@ -111,10 +107,10 @@
       <div class="modelBox">
         <div class="content">
           <p class="hk-icon"></p>
-          <p class="hk-tips">首笔入金1.1万港币或以上即可领取</p>
+          <p class="hk-tips">{{$t('MODEL_BOX.HK_TIPS')}}</p>
         </div>
         <div class="clickBtn" @click="jumpDeposit">
-          <p>立即入金</p>
+          <p>{{$t('MODEL_BOX.BTN')}}</p>
         </div>
         <div class="closeBtn" @click="closeDepositHKNoPopup"></div>
       </div>
@@ -131,17 +127,17 @@
         <div class="content">
           <table>
             <tr>
-              <th>首次入金满</th>
-              <th>奖励股票</th>
+              <th>{{$t('DEPOSIT_RULE.CONTENT1')}}</th>
+              <th>{{$t('DEPOSIT_RULE.CONTENT2')}}</th>
             </tr>
             <tr v-for="(item, index) in depositRwList" :key="index">
               <td>{{ item.curreny }}{{ item.amount }}</td>
-              <td>{{ item.stkQuantity }}股{{ item.stkName }}</td>
+              <td>{{ item.stkQuantity }}{{$t('DEPOSIT_RULE.G')}}{{ item.stkName }}</td>
             </tr>
           </table>
         </div>
         <div class="clickBtn" @click="closeDepositRulePopup">
-          <p>我知道了</p>
+          <p>{{$t('DEPOSIT_RULE.BTN')}}</p>
         </div>
       </div>
     </cube-popup>
@@ -157,19 +153,19 @@
         <div class="content">
           <table>
             <tr>
-              <th>首次转仓满</th>
-              <th>奖励股票</th>
+              <th>{{$t('TRANSFER_RULT.CONTENT1')}}</th>
+              <th>{{$t('TRANSFER_RULT.CONTENT2')}}</th>
             </tr>
             <tr v-for="(item, index) in transferRwList" :key="index">
               <td>{{ item.curreny }}{{ item.amount }}</td>
-              <td>{{ item.stkQuantity }}股{{ item.stkName }}</td>
+              <td>{{ item.stkQuantity }}{{$t('TRANSFER_RULT.G')}}{{ item.stkName }}</td>
             </tr>
           </table>
 
-          <p class="bottomTxt">*仅限大陆CA开户用户</p>
+          <p class="bottomTxt">{{$t('TRANSFER_RULT.TXT')}}</p>
         </div>
         <div class="clickBtn" @click="closeTransferRulePopup">
-          <p>我知道了</p>
+          <p>{{$t('TRANSFER_RULT.BTN')}}</p>
         </div>
       </div>
     </cube-popup>
@@ -186,20 +182,20 @@
         <div slot="content" class="yhs-dialog">
           <div class="stock-name">
             <span>{{ awardObj.stkName }}</span
-            >股票奖励
+            >{{$t('YSH_DIALOG.STOCK')}}
           </div>
           <div class="stock-bg"></div>
-          <div class="time">预计T+5工作日到账</div>
+          <div class="time">{{$t('YSH_DIALOG.TIME')}}</div>
           <div class="stock-info">
             【<span
               >{{ awardObj.stkName }}{{ awardObj.stkCode }}.{{
                 awardObj.mktCode
               }}</span
-            >】{{ awardObj.minNumber }}股
+            >】{{ awardObj.minNumber }}{{$t('YSH_DIALOG.G')}}
           </div>
           <div class="argeement">
             <cube-checkbox v-model="argeementStatus">
-              我同意并授权玖富证券团队处理印花税事宜
+              {{$t('YSH_DIALOG.ARGEEMENT')}}
             </cube-checkbox>
           </div>
         </div>
@@ -217,19 +213,16 @@
           <cube-scroll ref="scrollRule2">
             <ul class="list-wrap">
             <div class="content">
-              <p class="getStock">
-                获取<span class="stkName">【{{ depositRwStkName }}】</span
-                >股票奖励，
-              </p>
-              <p class="tips">入金满相应额度即可领取</p>
+              <p class="getStock" v-html="$t('SCROLL_RULE.GET_STOCK', { depositRwStkName })"></p>
+              <p class="tips">{{$t('SCROLL_RULE.TIPS')}}</p>
               <table>
                 <tr>
-                  <th>首次入金满</th>
-                  <th>奖励股票</th>
+                  <th>{{$t('SCROLL_RULE.TR1')}}</th>
+                  <th>{{$t('SCROLL_RULE.TR2')}}</th>
                 </tr>
                 <tr v-for="(item, index) in depositRwList" :key="index">
                   <td>{{ item.curreny }}{{ item.amount }}</td>
-                  <td>{{ item.stkQuantity }}股{{ item.stkName }}</td>
+                  <td>{{ item.stkQuantity }}{{$t('SCROLL_RULE.G')}}{{ item.stkName }}</td>
                 </tr>
               </table>
             </div>
@@ -251,22 +244,19 @@
           <cube-scroll ref="scrollRule3">
             <ul class="list-wrap">
               <div class="content">
-                <p class="getStock">
-                  获取<span class="stkName">【{{ transferRwStkName }}】</span
-                  >股票奖励，
-                </p>
-                <p class="tips">转仓市值满相应额度即可领取</p>
+                <p class="getStock" v-html="$t('SCROLL_RULE3.GET_STOCK', { transferRwStkName })"></p>
+                <p class="tips">{{$t('SCROLL_RULE3.TIPS')}}</p>
                 <table>
                   <tr>
-                    <th>首次转仓满</th>
-                    <th>奖励股票</th>
+                    <th>{{$t('SCROLL_RULE3.TR1')}}</th>
+                    <th>{{$t('SCROLL_RULE3.TR2')}}</th>
                   </tr>
                   <tr v-for="(item, index) in transferRwList" :key="index">
                     <td>{{ item.curreny }}{{ item.amount }}</td>
-                    <td>{{ item.stkQuantity }}股{{ item.stkName }}</td>
+                    <td>{{ item.stkQuantity }}{{$t('SCROLL_RULE3.G')}}{{ item.stkName }}</td>
                   </tr>
                 </table>
-                <p class="bottomTxt">*仅限大陆CA开户用户</p>
+                <p class="bottomTxt">{{$t('SCROLL_RULE3.TXT')}}</p>
               </div>
             </ul>
           </cube-scroll>
@@ -292,6 +282,7 @@ import { alert, toast } from '@/utils/tips'
 import { mapGetters } from 'vuex'
 import getIPaddress from '@/mixins/getIpAddress'
 import dayjs from 'dayjs'
+import i18n from '@/i18n'
 
 export default {
   components: {
@@ -368,9 +359,7 @@ export default {
     // 查询开户状态
     getOpenStatus() {
       recordApi.getOpenStatus({ openType: 1 }).then(res => {
-        console.log('查询开户状态res', res)
         this.openStatusObj = res
-        // this.depositStatus = res.depositStatus // 是否入金
       })
     },
     // 查询IP地址,判断是否为香港ip
@@ -388,11 +377,9 @@ export default {
     // 查询待领取股票
     getWaitReceiveStock() {
       recordApi.getWaitReceiveStock().then(res => {
-        console.log('待领取股票res', res)
         const stockList = res.stockList
         this.stockList = res.stockList
         this.isRequestOk = true
-        // console.log('this.stockList.length', this.stockList.length)
         this.mktValueAll = formatNum(res.mktValueAll)
         this.changeAll = formatNum(res.changeAll)
         const changePctAll = mul(res.changePctAll, 100)
@@ -590,7 +577,6 @@ export default {
 
       // 领取奖励
       recordApi.postFetchRewardConfirm(params).then(res => {
-        console.log('确认领取==>', res)
         this.getWaitReceiveStock()
       })
       this.visibleYHS = false
@@ -618,7 +604,7 @@ export default {
               this.awardObj = item
               this.showStockBox()
             } else {
-              toast({ txt: '奖励正在发放中，请稍后再来领取~' })
+              toast({ txt: i18n.t('AWARD_TIPS') })
             }
           } else if (bankType === 0 && !this.depositStatus) {
             this.showDepositHKNoPopup()
@@ -628,7 +614,7 @@ export default {
               this.awardObj = item
               this.showStockBox()
             } else {
-              toast({ txt: '奖励正在发放中，请稍后再来领取~' })
+              toast({ txt: i18n.t('AWARD_TIPS') })
             }
           }
         }
@@ -644,7 +630,7 @@ export default {
             this.awardObj = item
             this.showStockBox()
           } else {
-            toast({ txt: '奖励正在发放中，请稍后再来领取~' })
+            toast({ txt: i18n.t('AWARD_TIPS') })
           }
         }
       }
@@ -660,7 +646,7 @@ export default {
             this.awardObj = item
             this.showStockBox()
           } else {
-            toast({ txt: '奖励正在发放中，请稍后再来领取~' })
+            toast({ txt: i18n.t('AWARD_TIPS') })
           }
         }
       }
@@ -710,7 +696,7 @@ export default {
                   giftStockShare(params)
                 } else {
                   // 小于这个版本则做alert提示
-                  alert({ title: '提示', content: '该功能需要新版本才能使用哦，请立即升级' })
+                  alert({ title: i18n.t('UPDATE.TITLE'), content: i18n.t('UPDATE.CONTENT') })
                 }
               }
             })

@@ -4,10 +4,6 @@ const PostCompilePlugin = require('webpack-post-compile-plugin')
 
 const resolve = dir => path.join(__dirname, dir)
 
-// 开发环境
-// const target = 'http://10.1.5.126:9003'
-// 测试环境
-const target = 'http://10.1.5.125:9003'
 // 代理对象
 const proxy = {
   '/dev-url': {
@@ -25,24 +21,6 @@ const proxy = {
     }
   }
 }
-// const proxy = {}
-// const prefixs = [
-//   {
-//     path: '/dev',
-//     target,
-//     pathRewrite: {
-//       '^/dev': ''
-//     }
-//   }
-// ]
-// prefixs.forEach(item => {
-//   const { path, target, pathRewrite } = item
-//   proxy[path] = {
-//     target,
-//     pathRewrite,
-//     changeOrigin: true
-//   }
-// })
 
 module.exports = {
   // 部署应用包时的基本 URL

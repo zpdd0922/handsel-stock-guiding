@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { LANG_TYPE } from '@/api/config'
 
 // 实例化
 const instance = axios.create({
@@ -12,6 +13,8 @@ const instance = axios.create({
 // http请求拦截器<pendding>
 instance.interceptors.request.use(
   config => {
+    // 增加语言类型
+    config.headers.lang = sessionStorage.getItem(LANG_TYPE)
     // 防止get请求获取数据304缓存，必须保证状态为200
     if (config.method === 'get') {
       if (config.params) {

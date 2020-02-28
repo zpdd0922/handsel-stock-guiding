@@ -345,7 +345,6 @@ export default {
     }
   }
 
-
 .stocklist-black
   background-color $black-theme-242426
   .titleHeader{

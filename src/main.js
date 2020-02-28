@@ -11,6 +11,7 @@ import VueLazyLoad from 'vue-lazyload'
 
 import fastclick from 'fastclick'
 import lodash from 'lodash-es'
+import i18n from '@/i18n'
 
 // 样式配置
 import './assets/stylus/index.styl'
@@ -39,7 +40,8 @@ import {
   Form,
   Checkbox,
   Popup,
-  Scroll
+  Scroll,
+  Locale
 } from 'cube-ui'
 
 Vue.use(Slide)
@@ -53,6 +55,7 @@ Vue.use(Form)
 Vue.use(Checkbox)
 Vue.use(Popup)
 Vue.use(Scroll)
+Vue.use(Locale)
 
 // 单独设置页面的title和meta信息
 Vue.use(VueMeta)
@@ -77,6 +80,7 @@ if (process.env.VUE_APP_CONSOLE === 'show') {
 }
 
 new Vue({
+  i18n,
   router,
   store,
   render: h => h(App)
