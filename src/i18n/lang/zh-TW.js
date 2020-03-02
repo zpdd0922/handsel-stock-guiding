@@ -59,6 +59,65 @@ const tw = {
   'UPDATE': {
     'TITLE': '提示',
     'CONTENT': '該功能需要新版本才能使用哦，請立即陞級'
+  },
+  'HEADING': {
+    'NO_ACCOUNT': {
+      'TITLE': '您有{minNumber}股{stkName}待領取！',
+      'SUB_HEAD': '新人開戶，立領股票'
+    },
+    'ACCOUNT': {
+      'TITLE': '您有{minNumber}股{stkName}待領取！',
+      'SUB_HEAD': '首次入金就送藍籌股'
+    },
+    'BTN': '立即入金',
+    'OPEN_STATUS': {
+      'TYPE_0': '開戶預批通過',
+      'TYPE_1': '資料稽核中',
+      'TYPE_1_1': '開戶中',
+      'TYPE_2': '開戶失敗',
+      'TYPE_3': '資料被退回',
+      'TYPE_4': '資料被退回',
+      'TYPE_5': '資料被退回',
+      'TYPE_6': '立即開戶',
+      'TYPE_7': '開戶被拒絕',
+      'TYPE_8': '您已取消開戶',
+      'TYPE_9': '資料稽核通過',
+      'TYPE_10': '開戶中'
+    }
+  },
+  'STOCK_LIST': {
+    'TITLE_HEADER': {
+      'TITLE1': '名稱代碼',
+      'TITLE2': '可領數量',
+      'TITLE3': '市值',
+      'TITLE4': '現金/成本',
+      'TITLE5': '收益'
+    },
+    'LEFT_PART': {
+      'DISPLAY_VALIDITY_1': '領取條件/有效期',
+      'DISPLAY_VALIDITY_0': '領取條件',
+      'ACTIVE_TYPE_1': '首次開戶成功',
+      'ACTIVE_TYPE_2': '首次入金成功',
+      'ACTIVE_TYPE_3': '首次轉倉成功'
+    },
+    'RIGHT_PART': {
+      'DISABLED': '已過期',
+      'BUS_TYPE_4': '入帳中',
+      'BUS_TYPE_5': '已到賬',
+      'GT_BUS_TYPE_4': '立即領取',
+      'SHARE': '分享'
+    }
+  },
+  'STOCK_VALUE': {
+    'TITLE': '最大待領取股票市值（港幣）',
+    'PROFIT': '今日盈虧'
+  },
+  'TABLE': {
+    'LEFT': '已到賬',
+    'RIGHT': {
+      'COMMISSON_DAYS': '{stkQuantity}股{stkName}或{commissionDays}天免傭',
+      'EL': '{stkQuantity}股{stkName}'
+    }
   }
 }
 export default tw

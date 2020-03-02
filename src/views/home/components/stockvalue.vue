@@ -1,11 +1,11 @@
 <template>
   <div :class="['wrap', `wrap-${skin}`]">
     <div class="left">
-      <div class="title">最大待领取股票市值（港币）</div>
+      <div class="title">{{$t('STOCK_VALUE.TITLE')}}</div>
       <div class="value">{{ mktValueAll }}</div>
     </div>
     <div class="right">
-      <div class="profit">今日盈亏</div>
+      <div class="profit">{{$t('STOCK_VALUE.PROFIT')}}</div>
       <div v-if="changeAll > 0" class="number">+{{ changeAll }}</div>
       <div v-if="changeAll === 0" class="number">{{ changeAll }}</div>
       <div v-if="changeAll < 0" class="number">{{ changeAll }}</div>

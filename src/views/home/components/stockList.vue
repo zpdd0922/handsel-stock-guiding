@@ -1,11 +1,11 @@
 <template>
   <div :class="['stocklist', `stocklist-${skin}`]">
     <ul class="titleHeader">
-      <li class="title">名称代码</li>
-      <li class="title">可领数量</li>
-      <li class="title">市值</li>
-      <li class="title">现金/成本</li>
-      <li class="title">收益</li>
+      <li class="title">{{$t('STOCK_LIST.TITLE_HEADER.TITLE1')}}</li>
+      <li class="title">{{$t('STOCK_LIST.TITLE_HEADER.TITLE2')}}</li>
+      <li class="title">{{$t('STOCK_LIST.TITLE_HEADER.TITLE3')}}</li>
+      <li class="title">{{$t('STOCK_LIST.TITLE_HEADER.TITLE4')}}</li>
+      <li class="title">{{$t('STOCK_LIST.TITLE_HEADER.TITLE5')}}</li>
     </ul>
     <div class="contentList" v-for="(item, index) in stockList" :key="index">
       <ul class="stockContent">
@@ -62,20 +62,20 @@
       <!-- 领取条件 -->
       <ul class="lineBox">
         <li class="leftPart">
-          <p v-if="item.displayValidity === 1" class="title">领取条件/有效期</p>
-          <p v-if="item.displayValidity === 0" class="title">领取条件</p>
+          <p v-if="item.displayValidity === 1" class="title">{{$t('STOCK_LIST.LEFT_PART.DISPLAY_VALIDITY_1')}}</p>
+          <p v-if="item.displayValidity === 0" class="title">{{$t('STOCK_LIST.LEFT_PART.DISPLAY_VALIDITY_0')}}</p>
           <p>
             <span v-if="item.activeType === 1" class="txtLeft"
-              >首次开户成功</span
+              >{{$t('STOCK_LIST.LEFT_PART.ACTIVE_TYPE_1')}}</span
             >
             <span v-if="item.activeType === 2" class="txtLeft"
-              >首次入金成功<i
+              >{{$t('STOCK_LIST.LEFT_PART.ACTIVE_TYPE_2')}}<i
                 class="question"
                 @click="handleClickQuestion(item)"
               ></i>
             </span>
             <span v-if="item.activeType === 3" class="txtLeft"
-              >首次转仓成功<i
+              >{{$t('STOCK_LIST.LEFT_PART.ACTIVE_TYPE_3')}}<i
                 class="question"
                 @click="handleClickQuestion(item)"
               ></i>
@@ -91,30 +91,30 @@
               v-if="item.isExpired === 1"
               class="getbtn"
               disabled="disabled"
-              >已过期</cube-button
+              >{{$t('STOCK_LIST.RIGHT_PART.DISABLED')}}</cube-button
             >
           </template>
           <!-- 然后判断按钮状态 -->
           <template v-else>
             <div v-if="item.busType === 4" class="btnBox">
               <cube-button class="getbtn" disabled="disabled"
-                >入账中</cube-button
+                >{{$t('STOCK_LIST.RIGHT_PART.BUS_TYPE_4')}}</cube-button
               >
               <cube-button class="sharebtn" @click="handleClickShare(item)"
-                >分享</cube-button
+                >{{$t('STOCK_LIST.RIGHT_PART.SHARE')}}</cube-button
               >
             </div>
             <div v-if="item.busType === 5" class="btnBox">
               <cube-button class="getbtn" disabled="disabled"
-                >已到账</cube-button
+                >{{$t('STOCK_LIST.RIGHT_PART.BUS_TYPE_5')}}</cube-button
               >
               <cube-button class="sharebtn" @click="handleClickShare(item)"
-                >分享</cube-button
+                >{{$t('STOCK_LIST.RIGHT_PART.SHARE')}}</cube-button
               >
             </div>
             <div v-if="item.busType < 4" class="btnBox">
               <cube-button class="getbtn" @click="handleClick(item)"
-                >立即领取</cube-button
+                >{{$t('STOCK_LIST.RIGHT_PART.GT_BUS_TYPE_4')}}</cube-button
               >
             </div>
           </template>

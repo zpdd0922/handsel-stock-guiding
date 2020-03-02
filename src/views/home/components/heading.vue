@@ -6,22 +6,18 @@
       <template v-if="openAccountIsSuccess !== 0">
         <div class="title-wrap">
           <div class="title">
-            您有{{ headingStockOa.minNumber }}股{{
-              headingStockOa.stkName
-            }}待领取！
+            {{$t('HEADING.NO_ACCOUNT.TITLE', { minNumber: headingStockOa.minNumber, stkName: headingStockOa.stkName })}}
           </div>
-          <div class="subhead">新人开户，立领股票</div>
+          <div class="subhead">{{$t('HEADING.NO_ACCOUNT.SUB_HEAD')}}</div>
         </div>
       </template>
       <!-- 已入金 -->
       <template v-if="openAccountIsSuccess === 0">
         <div class="title-wrap">
           <div class="title">
-            您有{{ headingStockDe.minNumber }}股{{
-              headingStockDe.stkName
-            }}待领取！
+            {{$t('HEADING.NO_ACCOUNT.TITLE', { minNumber: headingStockDe.minNumber, stkName: headingStockDe.stkName })}}
           </div>
-          <div class="subhead">首次入金就送蓝筹股</div>
+          <div class="subhead">{{$t('HEADING.ACCOUNT.SUB_HEAD')}}</div>
         </div>
       </template>
     </div>
@@ -33,7 +29,7 @@
     </template>
     <template v-if="openAccountIsSuccess === 0">
       <div class="right" @click="DepositHandle">
-        <span class="content">立即入金</span>
+        <span class="content">{{$t('HEADING.BTN')}}</span>
         <i class="cubeic-arrow arrow"></i>
       </div>
     </template>
@@ -43,6 +39,7 @@
 <script type="text/ecmascript-6">
 import handleAppOpen from '@/utils/handleAppOpen'
 import recordApi from '@/api/modules/api-record'
+import i18n from '@/i18n'
 
 export default {
   props: {
@@ -64,48 +61,48 @@ export default {
       switch (openStatus) {
       // 开户预批通过
       case 0:
-        tpl = '开户预批通过'
+        tpl = i18n.t('HEADING.OPEN_STATUS.TYPE_0')
         break
         // 开户中
       case 1:
         if (openType === 1) {
-          tpl = '资料审核中'
+          tpl = i18n.t('HEADING.OPEN_STATUS.TYPE_1')
         } else {
-          tpl = '开户中'
+          tpl = i18n.t('HEADING.OPEN_STATUS.TYPE_1_1')
         }
         break
         // 开户失败
       case 2:
-        tpl = openStatusDesc || '开户失败'
+        tpl = openStatusDesc || i18n.t('HEADING.OPEN_STATUS.TYPE_2')
         break
         // 3.基本资料错误
         // 4.影像资料错误 -- H5需要更新错误图片上传
         // BMP处理已转字段：3,4全为退回状态
       case 3:
       case 4:
-        tpl = '资料被退回'
+        tpl = i18n.t('HEADING.OPEN_STATUS.TYPE_4')
         break
         // 基本资料和影像资料错误
       case 5:
-        tpl = openStatusDesc || '资料被退回'
+        tpl = openStatusDesc || i18n.t('HEADING.OPEN_STATUS.TYPE_5')
         break
         // 未提交开户资料 --> 初始状态
       case 6:
-        tpl = '立即开户'
+        tpl = i18n.t('HEADING.OPEN_STATUS.TYPE_6')
         break
         // 开户被拒绝
       case 7:
-        tpl = '开户被拒绝'
+        tpl = i18n.t('HEADING.OPEN_STATUS.TYPE_7')
         break
         // 用户取消开户
       case 8:
-        tpl = '您已取消开户'
+        tpl = i18n.t('HEADING.OPEN_STATUS.TYPE_8')
         break
       case 9:
-        tpl = '资料审核通过'
+        tpl = i18n.t('HEADING.OPEN_STATUS.TYPE_9')
         break
       case 10:
-        tpl = '开户中'
+        tpl = i18n.t('HEADING.OPEN_STATUS.TYPE_10')
         break
       default:
         break

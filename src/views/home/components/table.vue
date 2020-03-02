@@ -10,7 +10,7 @@
         <div class="left text-padding">
           <ul v-for="(item, index) in list" :key="index">
             <li v-if="type === 3 || type === 4">
-              已到账{{ item.curreny }}{{ item.totalCost }}
+              {{$t('TABLE.LEFT')}}{{ item.curreny }}{{ item.totalCost }}
             </li>
             <li v-if="type === 0 || type === 1 || type === 2">
               {{ `${item.curreny}${item.startAmount}~${item.endAmount}` }}
@@ -29,11 +29,9 @@
               :key="index + item.commissionDays"
             >
               <li v-if="item.commissionDays">
-                {{
-                  `${item.stkQuantity}股${item.stkName}或${item.commissionDays}天免佣`
-                }}
+                {{$t('TABLE.RIGHT.COMMISSON_DAYS', { stkQuantity: item.stkQuantity, stkName: item.stkName, commissionDays: item.commissionDays })}}
               </li>
-              <li v-else>{{ `${item.stkQuantity}股${item.stkName}` }}</li>
+              <li v-else>{{$t('TABLE.RIGHT.EL', { stkQuantity: item.stkQuantity, stkName: item.stkName })}}</li>
             </ul>
           </div>
         </cube-scroll>
