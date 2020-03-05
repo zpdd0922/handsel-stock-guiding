@@ -11,8 +11,8 @@ const cn = {
   },
   'OPEN_ACCOUNT_POPUP': {
     'TITLE': '恭喜您',
-    'GET_STOCK': `获取<span class="stkName">【{ stkName }】</span>`,
-    'STK_QUANTITY': '{ stkQuantity }股',
+    'GET_STOCK': `获取<span class="stkName">【{stkName}】</span>`,
+    'STK_QUANTITY': '{stkQuantity}股',
     'TIPS': '开户成功即可领取',
     'TIPS_HK': '*如香港银行卡开户则需首笔入金1.1万港币或以上才可领取',
     'BTN': '立即开户'
@@ -41,14 +41,14 @@ const cn = {
     'ARGEEMENT': '我同意并授权玖富证券团队处理印花税事宜'
   },
   'SCROLL_RULE': {
-    'GET_STOCK': `获取<span class="stkName">【{ depositRwStkName }】</span>股票奖励，`,
+    'GET_STOCK': `获取<span class="stkName">【{depositRwStkName}】</span>股票奖励，`,
     'TIPS': '入金满相应额度即可领取',
     'TR1': '首次入金满',
     'TR2': '奖励股票',
     'G': '股'
   },
   'SCROLL_RULE3': {
-    'GET_STOCK': `获取<span class="stkName">【{ transferRwStkName }】</span>股票奖励，`,
+    'GET_STOCK': `获取<span class="stkName">【{transferRwStkName}】</span>股票奖励，`,
     'TIPS': '转仓市值满相应额度即可领取',
     'TR1': '首次转仓满',
     'TR2': '奖励股票',

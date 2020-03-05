@@ -11,8 +11,8 @@ const tw = {
   },
   'OPEN_ACCOUNT_POPUP': {
     'TITLE': '恭喜您',
-    'GET_STOCK': `獲取<span class=“stkName”>【{ stkName }】</span>`,
-    'STK_QUANTITY': '{ stkQuantity }股',
+    'GET_STOCK': `獲取<span class=“stkName”>【{stkName}】</span>`,
+    'STK_QUANTITY': '{stkQuantity}股',
     'TIPS': '開戶成功即可領取',
     'TIPS_HK': '*如香港銀行卡開戶則需首筆入金1.1萬港幣或以上才可領取',
     'BTN': '立即開戶'
@@ -41,14 +41,14 @@ const tw = {
     'ARGEEMENT': '我同意並授權玖富證券團隊處理印花稅事宜'
   },
   'SCROLL_RULE': {
-    'GET_STOCK': `獲取<span class=“stkName”>【{ depositRwStkName }】</span>股票獎勵，`,
+    'GET_STOCK': `獲取<span class=“stkName”>【{depositRwStkName}】</span>股票獎勵，`,
     'TIPS': '入金滿相應額度即可領取',
     'TR1': '首次入金滿',
     'TR2': '獎勵股票',
     'G': '股'
   },
   'SCROLL_RULE3': {
-    'GET_STOCK': `獲取<span class=“stkName”>【{ transferRwStkName }】</span>股票獎勵，`,
+    'GET_STOCK': `獲取<span class=“stkName”>【{transferRwStkName}】</span>股票獎勵，`,
     'TIPS': '轉倉市值滿相應額度即可領取',
     'TR1': '首次轉倉滿',
     'TR2': '獎勵股票',
