@@ -76,6 +76,18 @@ export default {
     toast: true
   }),
 
+  /**
+   * 查询用户是否能使用卡包的增股
+   */
+  isCanUseStock: data => apiAsync({
+    method: 'post',
+    url: InterFaceUrl('/activity_api/isCanUseStock'),
+    data: paramsData.COMMON(data),
+    loading: true,
+    catchs: true,
+    toast: true
+  }),
+
   // 确认领取奖励
   postFetchRewardConfirm: data => apiAsync({
     method: 'post',

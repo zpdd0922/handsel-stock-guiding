@@ -596,26 +596,22 @@ export default {
         if (busType === 0) {
           this.showOpenAccountPopup()
         } else {
-          const result = await recordApi.getOpenBankType()
-          const { bankType } = result
-          if (bankType === 0 && this.depositStatus) {
-            // 判断系统奖励是否发送，发送则展示领取弹框，没发送则toas提示系统正在发放中
+          const { uId, UserCode } = this.userInfo
+          const params = {
+            userId: UserCode || uId,
+            rewardId: item.rewardId
+          }
+          const isCan = await recordApi.isCanUseStock(params)
+          // const { bankType } = result
+          if (isCan.canUse) {
             if (busType === 3) {
               this.awardObj = item
               this.showStockBox()
             } else {
               toast({ txt: i18n.t('AWARD_TIPS') })
             }
-          } else if (bankType === 0 && !this.depositStatus) {
-            this.showDepositHKNoPopup()
           } else {
-            // 判断系统奖励是否发送，发送则展示领取弹框，没发送则toas提示系统正在发放中
-            if (busType === 3) {
-              this.awardObj = item
-              this.showStockBox()
-            } else {
-              toast({ txt: i18n.t('AWARD_TIPS') })
-            }
+            this.showDepositHKNoPopup()
           }
         }
       }
