@@ -85,7 +85,7 @@ export default {
     data: paramsData.COMMON(data),
     loading: true,
     catchs: true,
-    toast: true
+    toast: false
   }),
 
   // 确认领取奖励

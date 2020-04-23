@@ -17,7 +17,7 @@ export const toast = ({ type = 'txt', txt, callback, time, mask }) => {
   toast.show()
 }
 
-export const alert = ({ title, content, callback, icon, type = 'alert' }) => {
+export const alert = ({ title, content, callback, icon, type = 'alert', createFunc }) => {
   const alert = vm.$createDialog({
     icon,
     title,
@@ -26,7 +26,7 @@ export const alert = ({ title, content, callback, icon, type = 'alert' }) => {
     onConfirm: () => {
       callback && callback()
     }
-  })
+  }, createFunc)
   alert.show()
 }
 

@@ -601,17 +601,50 @@ export default {
             userId: UserCode || uId,
             rewardId: item.rewardId
           }
-          const isCan = await recordApi.isCanUseStock(params)
-          // const { bankType } = result
-          if (isCan.canUse) {
-            if (busType === 3) {
-              this.awardObj = item
-              this.showStockBox()
-            } else {
-              toast({ txt: i18n.t('AWARD_TIPS') })
+          try {
+            const isCan = await recordApi.isCanUseStock(params)
+            if (!isCan) {
+              return
+            } else if (isCan && isCan.canUse) {
+              if (busType === 3) {
+                this.awardObj = item
+                this.showStockBox()
+              } else {
+                toast({ txt: i18n.t('AWARD_TIPS') })
+              }
             }
-          } else {
-            this.showDepositHKNoPopup()
+          } catch (error) {
+            const { code, message } = error
+            switch (code) {
+            case 20002:
+              this.showDepositHKNoPopup()
+              return
+            case 20003:
+              console.log('333', 333)
+              alert({
+                confirmTxt: '我知道了',
+                createFunc: (createElement) => {
+                  return [
+                    createElement('p', {
+                      class: 'confirm-tel-pt',
+                      slot: 'content'
+                    }, [
+                      createElement('span', '首次入金未满1.1万港元，咨询热线 '),
+                      createElement('span', {
+                        class: 'confirm-tel-color',
+                        on: {
+                          click: this.dial
+                        }
+                      }, '400-688-3187')
+                    ])
+                  ]
+                }
+              })
+              return
+            default:
+              toast({ txt: message })
+              return false
+            }
           }
         }
       }
@@ -710,6 +743,13 @@ export default {
   }
 }
 </script>
+
+<style lang="stylus">
+.confirm-tel-color
+  color #fc9153
+.confirm-tel-pt
+  padding 0 32px
+</style>
 
 <style scoped lang="stylus">
 @import './main'
