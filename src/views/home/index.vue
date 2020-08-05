@@ -283,6 +283,7 @@ import { mapGetters } from 'vuex'
 import getIPaddress from '@/mixins/getIpAddress'
 import dayjs from 'dayjs'
 import i18n from '@/i18n'
+import { HOST } from '@/api/config'
 
 export default {
   components: {
@@ -656,8 +657,10 @@ export default {
         } else {
           // 如果已入金，判断系统奖励是否发送，发送则展示领取弹框，没发送则toas提示系统正在发放中
           if (busType === 3) {
-            this.awardObj = item
-            this.showStockBox()
+            // this.awardObj = item
+            // this.showStockBox()
+            // 由于香港账户出现领取奖励bug，将满足入金条件后点击【立即领取】跳转至【我的-奖品中心】
+            window.location.href = `${HOST}/sunline/active-center`
           } else {
             toast({ txt: i18n.t('AWARD_TIPS') })
           }
